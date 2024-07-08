@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:58:56 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/05 16:19:06 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/08 10:34:42 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool Server::help( Client & cli, std::string str ) {
 	(void)str;
-	std::ifstream fin("src/help.txt");
+	std::ifstream fin("doc/help.txt");
 	if (fin.fail()) {
 		std::cerr << "Server opens 'help.txt': FAILURE" << std::endl;
 		return false;
