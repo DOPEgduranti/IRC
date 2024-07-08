@@ -1,0 +1,36 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.hpp                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/04 10:51:58 by gduranti          #+#    #+#             */
+/*   Updated: 2024/07/05 16:05:01 by gduranti         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef UTILS_HPP
+# define UTILS_HPP
+
+# include <iostream>
+# include <vector> //-> for vector
+# include <sys/socket.h> //-> for socket()
+# include <sys/types.h> //-> for socket()
+# include <netinet/in.h> //-> for sockaddr_in
+# include <fcntl.h> //-> for fcntl()
+# include <unistd.h> //-> for close()
+# include <arpa/inet.h> //-> for inet_ntoa()
+# include <poll.h> //-> for poll()
+# include <csignal> //-> for signal()
+# include <cstring>
+# include <algorithm>
+# include <map>
+# include <fstream>
+# include <sstream>
+# include <cstdlib>
+
+bool portKeyCheck( std::string port, std::string key );
+int ft_sendMsg( int fd, std::string msg );
+
+#endif
