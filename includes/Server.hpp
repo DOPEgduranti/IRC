@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:42 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/05 15:27:49 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/08 12:33:59 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,30 +29,34 @@ private:
 	Server( void );
 public:
 	Server( std::string port, std::string key );
-	Server( Server const & other );
-	~Server( void );
+	Server( Server const & other ) { *this = other; }
+	~Server( void ) { }
 	
 	Server & operator=( Server const & rhs );
 	
-	int getPort( void ) const;
-	std::string getKey( void ) const;
-	int getSocketFd( void ) const;
-	bool getSignal( void ) const;
+	int getPort( void ) const { return _port; }
+	std::string getKey( void ) const { return _key; }
+	int getSocketFd( void ) const { return _socketFd; }
+	bool getSignal( void ) const { return _signal; }
 
 	static void signalHandler( int signum );
 	
 	void setupServer( void );
 	void setupSocket( void );
 	void acceptClient( void );
+	bool clientLogin( Client & cli, size_t i, std::string str );
 	void receiveData( int fd );
+	void closePolls( void );
+	void removeClient( int fd );
 
 	bool pass( Client & cli, std::string str );
 	bool nick( Client & cli, std::string str );
+	bool user( Client & cli, std::string str );
+	
 	bool join( Client & cli, std::string str );
+	
 	bool help( Client & cli, std::string str );
 	
-	void closePolls( void );
-	void removeClient( int fd );
 };
 
 #endif

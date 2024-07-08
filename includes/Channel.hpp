@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:10:26 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/05 12:06:55 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/08 12:32:29 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ private:
 	bool _keyEnable;
 	bool _userLimit;
 public:
-	Channel( void );
+	Channel( void ) { }
 	Channel( std::string name, std::string key );
-	Channel( Channel const & other );
-	~Channel();
+	Channel( Channel const & other ) { *this = other; }
+	~Channel( void ) { }
 
 	Channel & operator=( Channel const & rhs );
 

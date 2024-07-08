@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:44 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/05 15:04:14 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/08 12:37:17 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,30 @@ class Client {
 private:
 	int _fd;
 	std::string _ipAddr;
-	std::string _nick;
+	std::string _nickname;
+	std::string _username;
+	std::string _hostname;
+	std::string _servername;
+	std::string _realname;
 	bool _logged;
 	std::vector<std::string> _channels;
 public:
 	Client( void );
-	Client( Client const & other );
-	~Client( void );
+	Client( Client const & other ) { *this = other; }
+	~Client( void ) {}
 	
 	Client & operator=( Client const & rhs );
 	bool operator==( int const & fd ) const;
 
 	int getFd( void ) const { return _fd; }
 	std::string getIpAddr( void ) const { return _ipAddr; }
-	std::string getNick( void ) const { return _nick; }
+	std::string getUsername( void ) const { return _username; }
+	std::string getNickname( void ) const { return _nickname; }
 	bool getLogged( void ) const { return _logged; }
 	
 	void setFd( int fd ) { _fd = fd; }
 	void setIpAddr( std::string ipAdd ) { _ipAddr = ipAdd; }
-	void setNick( std::string nickname ) { _nick = nickname; }
+	void setNickname( std::string nickname ) { _nickname = nickname; }
 
 	void login() { _logged = true; }
 };

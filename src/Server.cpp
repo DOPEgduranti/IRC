@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/05 15:48:39 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/08 12:35:33 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ bool Server::_signal = false;
 Server::Server() {
 	_cmds.insert(functions("PASS", &Server::pass));
 	_cmds.insert(functions("NICK", &Server::nick));
+	_cmds.insert(functions("USER", &Server::user));
 	_cmds.insert(functions("JOIN", &Server::join));
 	_cmds.insert(functions("HELP", &Server::help));
 }
@@ -27,16 +28,9 @@ Server::Server() {
 Server::Server( std::string port, std::string key ) : _port(static_cast<int>(std::strtol(port.c_str(), NULL, 10))), _key(key) {
 	_cmds.insert(functions("PASS", &Server::pass));
 	_cmds.insert(functions("NICK", &Server::nick));
+	_cmds.insert(functions("USER", &Server::user));
 	_cmds.insert(functions("JOIN", &Server::join));
 	_cmds.insert(functions("HELP", &Server::help));
-}
-
-Server::Server( Server const & other ) {
-	*this = other;
-}
-
-Server::~Server() {
-	
 }
 
 Server & Server::operator=( Server const & rhs ) {
@@ -51,22 +45,6 @@ Server & Server::operator=( Server const & rhs ) {
 	_channels = rhs._channels;
 	_cmds = rhs._cmds;
 	return *this;
-}
-
-int Server::getPort( void ) const {
-	return _port;
-}
-
-std::string Server::getKey( void ) const {
-	return _key;
-}
-
-int Server::getSocketFd( void ) const {
-	return _socketFd;
-}
-
-bool Server::getSignal( void ) const {
-	return _signal;
 }
 
 void Server::signalHandler( int signum ) {
@@ -141,7 +119,33 @@ void Server::acceptClient( void ) {
 	_clients.push_back(myClient);
 	_polls.push_back(myPoll);
 	std::cout << "Client <" << clientFd << "> connection: SUCCESS" << std::endl;
-	send(myClient.getFd(), "Welcome!\nInsert server password to continue.\n", 46, 0);
+	ft_sendMsg(myClient.getFd(), "server: Welcome!\n");
+	ft_sendMsg(myClient.getFd(), "server: Insert server password to continue.\n");
+}
+
+bool Server::clientLogin( Client & cli, size_t i, std::string str ) {
+	if (cli.getUsername().empty()) {
+		if (cli.getNickname().empty()) {
+			if (cli.getLogged() == false) {
+				if (str.substr(0, i) == "PASS")
+					pass(cli, str);
+				else
+					ft_sendMsg(cli.getFd(), "server: Please insert server password using 'PASS'\n");
+				return false;
+			}
+			else if (str.substr(0, i) == "NICK")
+				nick(cli, str);
+			else
+				ft_sendMsg(cli.getFd(), "server: Please choose a nickname using 'NICK'\n");
+			return false;
+		}
+		else if (str.substr(0, i) == "USER")
+			user(cli, str);
+		else
+			ft_sendMsg(cli.getFd(), "server: Please complete your login using 'USER'\n");
+		return false;
+	}
+	return true;
 }
 
 void Server::receiveData( int fd ) {
@@ -149,6 +153,7 @@ void Server::receiveData( int fd ) {
 	memset(buffer, 0, sizeof(buffer));
 	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
 	std::vector<Client>::iterator cli = std::find(_clients.begin(), _clients.end(), fd);
+	std::cout << "Client <" << (*cli).getFd() << "> sent this: '" << buffer << "'" << std::endl;
 	if (bytes <= 0) {
 		std::cout << "Client <" << (*cli).getFd() << "> has Disconnected" << std::endl;
 		removeClient(fd);
@@ -158,31 +163,16 @@ void Server::receiveData( int fd ) {
 		buffer[bytes] = 0;
 		std::string str = buffer;
 		size_t i = 0;
-		std::cout << "Client <" << (*cli).getFd() << "> sent this: '" << buffer << "'" << std::endl;
 		while (buffer[i] && !std::isspace(buffer[i]))
 			i++;
 		if (_cmds.find(str.substr(0, i)) == _cmds.end()) {
-			std::cout << str.substr(0, i) << " not found" << std::endl;
+			std::cout << "server: " << str.substr(0, i) << " not found" << std::endl;
 			return ;
 		}
 		else if (str.substr(0, i) == "HELP")
 			help(*cli, buffer);
-		else if ((*cli).getNick().empty()) {
-			if ((*cli).getLogged() == false) {
-				if (str.substr(0, i) == "PASS")
-					pass(*cli, buffer);
-				else {
-					send(fd, "Please insert server password using 'PASS'\n", 44, 0);
-					return ;
-				}
-			}
-			else if (str.substr(0, i) == "NICK")
-				nick(*cli, buffer);
-			else {
-					send(fd, "Please choose a nickname using 'NICK'\n", 39, 0);
-					return ;
-				}
-		}
+		else if (clientLogin(*cli, i, str) == false)
+			return ;
 		else
 			(this->*(_cmds[str.substr(0, i)]))(*cli, buffer);
 	}

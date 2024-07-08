@@ -6,7 +6,7 @@
 #    By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/03 12:26:02 by gduranti          #+#    #+#              #
-#    Updated: 2024/07/05 12:34:42 by gduranti         ###   ########.fr        #
+#    Updated: 2024/07/08 12:38:53 by gduranti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,9 +23,15 @@ SRC = main.cpp \
 	Server.cpp \
 	Client.cpp \
 	utils.cpp \
-	Channel.cpp \
-	Server_cmds.cpp
-SRCS = $(addprefix $(SRCFOLDER)/, $(SRC))
+	Channel.cpp
+
+CMDFOLDER = cmd
+CMD = login.cpp \
+	chans.cpp \
+	support.cpp
+CMDS = $(addprefix $(CMDFOLDER)/, $(CMD))
+
+SRCS = $(addprefix $(SRCFOLDER)/, $(SRC) $(CMD))
 
 $(NAME):
 	$(CC) $(CFLAGS) $(SRCS) -I$(DEPS) -o $(NAME)
