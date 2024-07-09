@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:10:26 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/08 12:32:29 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/09 12:24:07 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <utils.hpp>
 # include <Client.hpp>
 
+class Client;
 class Channel {
 private:
 	std::string _name;
@@ -27,13 +28,15 @@ private:
 	bool _topicRestricted;
 	bool _keyEnable;
 	bool _userLimit;
-public:
 	Channel( void ) { }
+public:
 	Channel( std::string name, std::string key );
 	Channel( Channel const & other ) { *this = other; }
 	~Channel( void ) { }
 
 	Channel & operator=( Channel const & rhs );
+	bool operator==( Channel const & other ) const;
+	bool operator==( std::string const & str ) const;
 
 	std::string getName( void ) const { return _name; }
 	std::string getKey( void ) const { return _key; }
@@ -44,7 +47,7 @@ public:
 	bool getKeyEnable( void ) const { return _keyEnable; }
 	bool getUserLimit( void ) const { return _userLimit; }
 
-	
+	void addUser( Client & cli );
 };
 
 #endif

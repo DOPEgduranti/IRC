@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:51:58 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/05 16:05:01 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:55:00 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,11 @@
 # include <fstream>
 # include <sstream>
 # include <cstdlib>
+# include <deque>
 
 bool portKeyCheck( std::string port, std::string key );
 int ft_sendMsg( int fd, std::string msg );
+std::string getFirstString( std::string & str );
+std::deque<std::string> ft_split( std::string & str, char c );
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:42 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/08 12:33:59 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/08 16:32:40 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ private:
 	std::vector<Client> _clients;
 	std::vector<struct pollfd> _polls;
 	std::vector<Channel> _channels;
-	std::map<std::string, bool (Server::*)(Client &, std::string)> _cmds;
+	std::map<std::string, bool (Server::*)(Client &, std::deque<std::string>)> _cmds;
 	Server( void );
 public:
 	Server( std::string port, std::string key );
@@ -44,18 +44,19 @@ public:
 	void setupServer( void );
 	void setupSocket( void );
 	void acceptClient( void );
-	bool clientLogin( Client & cli, size_t i, std::string str );
+	bool clientLogin( Client & cli, std::deque<std::string> input );
 	void receiveData( int fd );
 	void closePolls( void );
 	void removeClient( int fd );
 
-	bool pass( Client & cli, std::string str );
-	bool nick( Client & cli, std::string str );
-	bool user( Client & cli, std::string str );
+	bool pass( Client & cli, std::deque<std::string> input );
+	bool nick( Client & cli, std::deque<std::string> input );
+	bool user( Client & cli, std::deque<std::string> input );
+	bool quit( Client & cli, std::deque<std::string> input );
 	
-	bool join( Client & cli, std::string str );
+	bool join( Client & cli, std::deque<std::string> input );
 	
-	bool help( Client & cli, std::string str );
+	bool help( Client & cli, std::deque<std::string> input );
 	
 };
 

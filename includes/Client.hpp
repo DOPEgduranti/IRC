@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:44 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/08 12:37:17 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:34:00 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define CLIENT_HPP
 
 #include <utils.hpp>
+#include <Channel.hpp>
+
+class Channel;
 
 class Client {
 private:
@@ -25,13 +28,14 @@ private:
 	std::string _servername;
 	std::string _realname;
 	bool _logged;
-	std::vector<std::string> _channels;
+	std::vector<Channel> _channels;
 public:
 	Client( void );
 	Client( Client const & other ) { *this = other; }
 	~Client( void ) {}
 	
 	Client & operator=( Client const & rhs );
+	bool operator==( Client const & other ) const;
 	bool operator==( int const & fd ) const;
 
 	int getFd( void ) const { return _fd; }
@@ -43,8 +47,10 @@ public:
 	void setFd( int fd ) { _fd = fd; }
 	void setIpAddr( std::string ipAdd ) { _ipAddr = ipAdd; }
 	void setNickname( std::string nickname ) { _nickname = nickname; }
+	void setUser( std::string username, std::string hostname, std::string servername, std::string realname );
 
-	void login() { _logged = true; }
+	void login( void ) { _logged = true; }
+	bool joinChannel( Channel & chan, std::string key );
 };
 
 #endif

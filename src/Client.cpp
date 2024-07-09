@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:54:21 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/08 12:37:14 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:59:55 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,36 @@ Client & Client::operator=( Client const & rhs ) {
 	return *this;
 }
 
+bool Client::operator==( Client const & other ) const {
+	if (_fd == other.getFd())
+		return true;
+	return false;
+}
+
 bool Client::operator==( int const & fd ) const {
 	if (_fd == fd)
 		return true;
 	return false;
 }
 
+void Client::setUser( std::string username, std::string hostname, std::string servername, std::string realname ) {
+	_username = username;
+	_hostname = hostname;
+	_servername = servername;
+	_realname = realname;
+}
+
+bool Client::joinChannel( Channel & chan, std::string key ) {
+	std::vector<Channel>::iterator it = std::find(_channels.begin(), _channels.end(), chan);
+	if (it != _channels.end()) {
+		ft_sendMsg(_fd, "channel: you already join this channel");
+		return true;
+	}
+	if (chan.getKey() != key) {
+		ft_sendMsg(_fd, "channel: correct key is required");
+		return false;
+	}
+	_channels.push_back(chan);
+	chan.addUser(*this);
+	return true;
+}
