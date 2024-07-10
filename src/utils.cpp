@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:51:47 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/09 12:55:58 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/10 16:27:33 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,32 @@ std::string getFirstString( std::string & str ) {
 	return str.substr(i, j - i);
 }
 
+std::string ft_erase( std::string & str, char c ) {
+	if (c <= 0 || c > 127)
+		return str;
+	std::string::iterator it = std::find(str.begin(), str.end(), c);
+	while (it != str.end()) {
+		str.erase(it);
+		it = std::find(str.begin(), str.end(), c);
+	}
+	return str;
+}
+
+std::string ft_erase( std::string & str, std::string set ) {
+	for (size_t i = 0; i < set.size(); i++) {
+		std::string::iterator it = std::find(str.begin(), str.end(), set[i]);
+		while (it != str.end()) {
+			str.erase(it);
+			it = std::find(str.begin(), str.end(), set[i]);
+		}
+	}
+	return str;
+}
+
 std::deque<std::string> ft_split( std::string & str, char c ) {
 	std::deque<std::string> deq;
 	if (str.find(c) == std::string::npos) {
-		deq.push_back(str.erase('\r').erase('\n'));
+		deq.push_back(ft_erase(str, "\r\n"));
 		return deq;
 	}
 	std::string tmp;
@@ -63,4 +85,11 @@ std::deque<std::string> ft_split( std::string & str, char c ) {
 	if (!tmp.empty())
 		deq.push_back(tmp);
 	return deq;
+}
+
+bool channelSintax( std::string & str ) {
+	if (str.empty() || str.size() < 2)
+		return false;
+	if (str[0] != '#')
+		return false;
 }

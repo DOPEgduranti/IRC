@@ -6,15 +6,15 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/09 12:33:12 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/10 16:28:37 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Server.hpp>
 
 bool Server::join( Client & cli, std::deque<std::string> input ) {
-	if (input.size() < 2 || input.size() > 3) {
-		ft_sendMsg(cli.getFd(), "server: 'JOIN' usage is JOIN <channels> [<keys>]");
+	if (input.size() < 2) {
+		ft_sendMsg(cli.getFd(), "Server" ERR_NEEDMOREPARAMS);
 		return false;
 	}
 	input.pop_front();
@@ -27,12 +27,15 @@ bool Server::join( Client & cli, std::deque<std::string> input ) {
 		key.push_back("");
 	std::cout << "debug: " << chans.front() << std::endl;
 	while (!chans.empty()) {
-		std::vector<Channel>::iterator it = std::find(_channels.begin(), _channels.end(), chans.front());
-		if (it != _channels.end())
-				cli.joinChannel(*it, key.front());
-		else {
-			_channels.push_back(Channel(chans.front(), key.front()));
-			cli.joinChannel(_channels.back(), key.front());
+		if (channelSintax(chans.front())) {
+			std::vector<Channel>::iterator it = std::find(_channels.begin(), _channels.end(), chans.front());
+			if (it != _channels.end())
+					cli.joinChannel(*it, key.front());
+			else {
+				_channels.push_back(Channel(chans.front(), key.front()));
+				ft_sendMsg(cli.getFd(), "Server :You create channel '" + chans.front() + "'");
+				cli.joinChannel(_channels.back(), key.front());
+			}
 		}
 		chans.pop_front();
 		key.pop_front();

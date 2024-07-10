@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/09 12:50:44 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/10 12:18:46 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,8 @@ void Server::acceptClient( void ) {
 	_clients.push_back(myClient);
 	_polls.push_back(myPoll);
 	std::cout << "Client <" << clientFd << "> connection: SUCCESS" << std::endl;
-	ft_sendMsg(myClient.getFd(), "server: Welcome!");
-	ft_sendMsg(myClient.getFd(), "server: Insert server password to continue.");
+	ft_sendMsg(myClient.getFd(), "Server :Welcome!");
+	ft_sendMsg(myClient.getFd(), "Server :Insert server password to continue.");
 }
 
 bool Server::clientLogin( Client & cli, std::deque<std::string> input ) {
@@ -132,19 +132,19 @@ bool Server::clientLogin( Client & cli, std::deque<std::string> input ) {
 				if (input.front() == "PASS")
 					pass(cli, input);
 				else
-					ft_sendMsg(cli.getFd(), "server: Please insert server password using 'PASS'");
+					ft_sendMsg(cli.getFd(), "Server :Please insert server password using 'PASS'");
 				return false;
 			}
 			else if (input.front() == "NICK")
 				nick(cli, input);
 			else
-				ft_sendMsg(cli.getFd(), "server: Please choose a nickname using 'NICK'");
+				ft_sendMsg(cli.getFd(), "Server :Please choose a nickname using 'NICK'");
 			return false;
 		}
 		else if (input.front() == "USER")
 			user(cli, input);
 		else
-			ft_sendMsg(cli.getFd(), "server: Please complete your login using 'USER'");
+			ft_sendMsg(cli.getFd(), "Server :Please complete your login using 'USER'");
 		return false;
 	}
 	return true;
@@ -158,7 +158,7 @@ void Server::receiveData( int fd ) {
 	std::cout << "Client <" << (*cli).getFd() << "> sent this: '" << buffer << "'" << std::endl;
 	if (bytes <= 0) {
 		std::cout << "Client <" << (*cli).getFd() << "> has Disconnected" << std::endl;
-		removeClient(fd);
+		removeClient(*cli);
 		close(fd);
 	}
 	else {
@@ -167,8 +167,10 @@ void Server::receiveData( int fd ) {
 		std::deque<std::string> input = ft_split(str, ' ');
 		for (size_t i = 0; i < input.size(); i++)
 			std::cout << "input[" << i << "]: '" << input[i] << "'" << std::endl;
+		if (input.empty() || input.front().empty())
+			return ;
 		if (_cmds.find(input.front()) == _cmds.end()) {
-			ft_sendMsg(fd, "server: command not found");
+			ft_sendMsg(fd, "Server :Command '" + input.front() + "' not found");
 			return ;
 		}
 		else if (input.front() == "HELP")
@@ -191,17 +193,23 @@ void Server::closePolls( void ) {
 	}
 }
 
-void Server::removeClient( int fd ) {
+void Server::removeClient( Client & cli ) {
+	close(cli.getFd());
 	for(size_t i = 0; i < _polls.size(); i++) {
-		if (_polls[i].fd == fd) {
+		if (_polls[i].fd == cli.getFd()) {
 			_polls.erase(_polls.begin() + i);
 			break ;
 		}
 	}
-	for(size_t i = 0; i < _clients.size(); i++) {
-		if (_clients[i].getFd() == fd) {
-			_clients.erase(_clients.begin() + i);
-			break ;
-		}
+	if (std::find(_clients.begin(), _clients.end(), cli) != _clients.end()) {
+		for (size_t i = 0; i < _channels.size(); i++)
+			_channels[i].removeUser(cli);
+		_clients.erase(std::find(_clients.begin(), _clients.end(), cli));
 	}
+	// for(size_t i = 0; i < _clients.size(); i++) {
+	// 	if (_clients[i].getFd() == fd) {
+	// 		_clients.erase(_clients.begin() + i);
+	// 		break ;
+	// 	}
+	// }
 }

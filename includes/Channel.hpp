@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:10:26 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/09 12:24:07 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/10 16:11:39 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ private:
 	std::string _topic;
 	int _maxUsers;
 	std::vector<Client> _users;
+	std::vector<Client> _invites;
+	std::vector<Client> _operators;
 	bool _inviteOnly;
 	bool _topicRestricted;
 	bool _keyEnable;
@@ -48,6 +50,9 @@ public:
 	bool getUserLimit( void ) const { return _userLimit; }
 
 	void addUser( Client & cli );
+	void addOperator( Client & cli );
+	void removeUser( Client & cli );
+	bool userInvited( Client const & cli );
 };
 
 #endif

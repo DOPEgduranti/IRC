@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:54:21 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/09 11:59:55 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/10 16:20:55 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,11 @@ Client & Client::operator=( Client const & rhs ) {
 }
 
 bool Client::operator==( Client const & other ) const {
-	if (_fd == other.getFd())
-		return true;
-	return false;
+	if (_fd != other._fd)
+		return false;
+	if (_nickname != other._nickname)
+		return false;
+	return true;
 }
 
 bool Client::operator==( int const & fd ) const {
@@ -51,13 +53,18 @@ void Client::setUser( std::string username, std::string hostname, std::string se
 bool Client::joinChannel( Channel & chan, std::string key ) {
 	std::vector<Channel>::iterator it = std::find(_channels.begin(), _channels.end(), chan);
 	if (it != _channels.end()) {
-		ft_sendMsg(_fd, "channel: you already join this channel");
+		ft_sendMsg(_fd, chan.getName() + ": you already join this channel.");
 		return true;
 	}
-	if (chan.getKey() != key) {
-		ft_sendMsg(_fd, "channel: correct key is required");
+	if (chan.getIviteOnly() && !chan.userInvited(*this)) {
+		ft_sendMsg(_fd, chan.getName() + ": invitation is required.");
 		return false;
 	}
+	if (chan.getKeyEnable() && chan.getKey() != key) {
+		ft_sendMsg(_fd, chan.getName() + ": correct key is required.");
+		return false;
+	}
+	ft_sendMsg(_fd, chan.getName() + ": you joined the channel.");
 	_channels.push_back(chan);
 	chan.addUser(*this);
 	return true;
