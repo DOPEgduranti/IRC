@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 09:52:44 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/11 16:05:23 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,11 @@ void Channel::addUser( Client & cli ) {
 	_users.push_back(cli);
 	if (_users.size() == 1)
 		_operators.push_back(cli);
-	ft_sendMsg(cli.getFd(), _name + " :" + _topic);
-	std::string mess;
+	if (_topic.empty())
+		ft_sendMsg(cli.getFd(), ":server 332 " + cli.getNickname() + " " + _name + " :No topic is set");
+	else
+		ft_sendMsg(cli.getFd(), ":server 332 " + cli.getNickname() + " " + _name + " :" + _topic);
+	std::string mess = ":server 353 " + cli.getNickname() + " " + _name + " :" ;
 	for (size_t i = 0; i < _users.size(); i++) {
 		if (std::find(_operators.begin(), _operators.end(), _users[i]) != _operators.end())
 			mess += "@";
@@ -68,7 +71,7 @@ void Channel::addUser( Client & cli ) {
 		if (i < _users.size() - 1)
 			mess += " ";
 	}
-	ft_sendMsg(cli.getFd(), _name + " :" + mess);
+	ft_sendMsg(cli.getFd(), mess);
 	std::cout << _name << ": Client <" << cli.getFd() << "> joined the channel" << std::endl;
 }
 

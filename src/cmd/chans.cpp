@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 11:09:55 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/11 16:07:19 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool Server::join( Client & cli, std::deque<std::string> input ) {
 	if (input.size() < 2) {
-		ft_sendMsg(cli.getFd(), "Server" ERR_NEEDMOREPARAMS);
+		ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "JOIN");
 		return false;
 	}
 	input.pop_front();
@@ -29,7 +29,7 @@ bool Server::join( Client & cli, std::deque<std::string> input ) {
 	while (!chans.empty()) {
 		if (channelSintax(chans.front())) {
 			if (cli.getChannelNbr() >= MAX_JOINABLECHANNELS) {
-				ft_sendMsg(cli.getFd(), chans.front() + ERR_TOOMANYCHANNELS);
+				ERR_TOOMANYCHANNELS(cli.getFd(), cli.getNickname(), chans.front());
 				return false;
 			}
 			std::vector<Channel>::iterator it = std::find(_channels.begin(), _channels.end(), chans.front());
@@ -37,7 +37,6 @@ bool Server::join( Client & cli, std::deque<std::string> input ) {
 					cli.joinChannel(*it, key.front());
 			else {
 				_channels.push_back(Channel(chans.front(), key.front()));
-				ft_sendMsg(cli.getFd(), "Server :You create channel '" + chans.front() + "'");
 				cli.joinChannel(_channels.back(), key.front());
 			}
 		}
@@ -48,5 +47,7 @@ bool Server::join( Client & cli, std::deque<std::string> input ) {
 }
 
 bool Server::mode( Client & cli, std::deque<std::string> input ) {
-	
+	(void)cli;
+	(void)input;
+	return true;
 }

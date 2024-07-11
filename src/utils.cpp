@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:51:47 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 10:27:19 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/11 16:09:51 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool portKeyCheck( std::string port, std::string key ) {
 }
 
 int ft_sendMsg( int fd, std::string msg ) {
-	msg.append("\r\n");
+	msg += "\r\n";
 	return send(fd, msg.c_str(), msg.size(), 0);
 }
 

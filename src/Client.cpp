@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:54:21 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 10:19:09 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/11 15:58:46 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,17 @@ bool Client::joinChannel( Channel & chan, std::string key ) {
 		return true;
 	}
 	if (chan.getUserLimit() && chan.getMaxUsers() == chan.getUsersNbr()) {
-		ft_sendMsg(_fd, chan.getName() + ERR_CHANNELISFULL);
+		ERR_CHANNELISFULL(_fd, _nickname, chan.getName());
 		return false;
 	}
 	if (chan.getIviteOnly() && !chan.userInvited(*this)) {
-		ft_sendMsg(_fd, chan.getName() + ERR_INVITEONLYCHAN);
+		ERR_INVITEONLYCHAN(_fd, _nickname, chan.getName());
 		return false;
 	}
 	if (chan.getKeyEnable() && chan.getKey() != key) {
-		ft_sendMsg(_fd, chan.getName() + ERR_BADCHANNELKEY);
+		ERR_BADCHANNELKEY(_fd, _nickname, chan.getName());
 		return false;
 	}
-	ft_sendMsg(_fd, chan.getName() + ": you joined the channel");
 	_channels.push_back(chan);
 	chan.addUser(*this);
 	return true;

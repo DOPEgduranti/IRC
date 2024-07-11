@@ -6,7 +6,7 @@
 #    By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/03 12:26:02 by gduranti          #+#    #+#              #
-#    Updated: 2024/07/09 12:18:04 by gduranti         ###   ########.fr        #
+#    Updated: 2024/07/11 15:17:16 by gduranti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,10 +28,16 @@ SRC = main.cpp \
 CMDFOLDER = cmd
 CMD = login.cpp \
 	chans.cpp \
-	support.cpp
+	support.cpp \
+	communication.cpp
 CMDS = $(addprefix $(CMDFOLDER)/, $(CMD))
 
-SRCS = $(addprefix $(SRCFOLDER)/, $(SRC) $(CMDS))
+MSGFOLDER = msg
+MSG = errors.cpp \
+	replies.cpp
+MSGS = $(addprefix $(MSGFOLDER)/, $(MSG))
+
+SRCS = $(addprefix $(SRCFOLDER)/, $(SRC) $(CMDS) $(MSGS))
 
 $(NAME):
 	$(CC) $(CFLAGS) $(SRCS) -I$(DEPS) -o $(NAME)

@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 11:13:14 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/11 16:43:59 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,19 @@ typedef std::pair<std::string, bool (Server::*)(Client &, std::deque<std::string
 
 bool Server::_signal = false;
 
-Server::Server() {
-	_cmds.insert(functions("PASS", &Server::pass));
-	_cmds.insert(functions("NICK", &Server::nick));
-	_cmds.insert(functions("USER", &Server::user));
-	_cmds.insert(functions("QUIT", &Server::quit));
-	_cmds.insert(functions("JOIN", &Server::join));
-	_cmds.insert(functions("MODE", &Server::mode));
-	_cmds.insert(functions("HELP", &Server::help));
-}
-
 Server::Server( std::string port, std::string key ) : _port(static_cast<int>(std::strtol(port.c_str(), NULL, 10))), _key(key) {
 	_cmds.insert(functions("PASS", &Server::pass));
 	_cmds.insert(functions("NICK", &Server::nick));
 	_cmds.insert(functions("USER", &Server::user));
 	_cmds.insert(functions("QUIT", &Server::quit));
+	_cmds.insert(functions("PRIVMSG", &Server::privmsg));
 	_cmds.insert(functions("JOIN", &Server::join));
 	_cmds.insert(functions("MODE", &Server::mode));
 	_cmds.insert(functions("HELP", &Server::help));
+	_cmds.insert(functions("PING", &Server::ping));
+	_cmds.insert(functions("PONG", &Server::pong));
+	_cmds.insert(functions("WHO", &Server::who));
+	_cmds.insert(functions("USERHOST", &Server::userhost));
 }
 
 Server & Server::operator=( Server const & rhs ) {
@@ -123,8 +118,6 @@ void Server::acceptClient( void ) {
 	_clients.push_back(myClient);
 	_polls.push_back(myPoll);
 	std::cout << "Client <" << clientFd << "> connection: SUCCESS" << std::endl;
-	ft_sendMsg(myClient.getFd(), "Server :Welcome!");
-	ft_sendMsg(myClient.getFd(), "Server :Insert server password to continue.");
 }
 
 bool Server::clientLogin( Client & cli, std::deque<std::string> input ) {
