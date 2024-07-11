@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/10 16:44:27 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/11 09:52:44 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,11 @@ void Channel::addUser( Client & cli ) {
 	for (size_t i = 0; i < _users.size(); i++) {
 		if (std::find(_operators.begin(), _operators.end(), _users[i]) != _operators.end())
 			mess += "@";
-		mess += _users[i].getNickname() + " ";
+		mess += _users[i].getNickname();
+		if (i < _users.size() - 1)
+			mess += " ";
 	}
+	ft_sendMsg(cli.getFd(), _name + " :" + mess);
 	std::cout << _name << ": Client <" << cli.getFd() << "> joined the channel" << std::endl;
 }
 

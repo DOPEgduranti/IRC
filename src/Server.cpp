@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/10 12:18:46 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/11 11:13:14 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ Server::Server() {
 	_cmds.insert(functions("USER", &Server::user));
 	_cmds.insert(functions("QUIT", &Server::quit));
 	_cmds.insert(functions("JOIN", &Server::join));
+	_cmds.insert(functions("MODE", &Server::mode));
 	_cmds.insert(functions("HELP", &Server::help));
 }
 
@@ -32,6 +33,7 @@ Server::Server( std::string port, std::string key ) : _port(static_cast<int>(std
 	_cmds.insert(functions("USER", &Server::user));
 	_cmds.insert(functions("QUIT", &Server::quit));
 	_cmds.insert(functions("JOIN", &Server::join));
+	_cmds.insert(functions("MODE", &Server::mode));
 	_cmds.insert(functions("HELP", &Server::help));
 }
 

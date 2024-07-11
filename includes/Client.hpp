@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:44 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/09 11:34:00 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/11 11:01:19 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <utils.hpp>
 #include <Channel.hpp>
+
+# define MAX_JOINABLECHANNELS 3
 
 class Channel;
 
@@ -43,6 +45,7 @@ public:
 	std::string getUsername( void ) const { return _username; }
 	std::string getNickname( void ) const { return _nickname; }
 	bool getLogged( void ) const { return _logged; }
+	int getChannelNbr( void ) const { return _channels.size(); }
 	
 	void setFd( int fd ) { _fd = fd; }
 	void setIpAddr( std::string ipAdd ) { _ipAddr = ipAdd; }

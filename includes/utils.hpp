@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:51:58 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/10 16:24:57 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/11 10:20:01 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,6 @@ std::deque<std::string> ft_split( std::string & str, char c );
 std::string ft_erase( std::string & str, char c );
 std::string ft_erase( std::string & str, std::string set );
 bool channelSintax( std::string & str );
+bool nickSintax( std::string & str );
 
 #endif

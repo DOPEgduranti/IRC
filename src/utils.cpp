@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:51:47 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/10 16:27:33 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/11 10:27:19 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,15 @@ bool channelSintax( std::string & str ) {
 		return false;
 	if (str[0] != '#')
 		return false;
+	return true;
+}
+
+bool nickSintax( std::string & str ) {
+	if (str.empty())
+		return false;
+	for (size_t i = 0; i < str.size(); i++) {
+		if (!std::isalnum(str[i]) && str[i] != '-' && str[i] != '_')
+			return false;
+	}
+	return true;
 }

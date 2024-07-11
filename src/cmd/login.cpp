@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:20:31 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/10 12:19:11 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/11 10:33:39 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,14 @@ bool Server::pass( Client & cli, std::deque<std::string> input ) {
 
 bool Server::nick( Client & cli, std::deque<std::string> input ) {
 	if (input.size() < 2) {
-		ft_sendMsg(cli.getFd(), "NICK" ERR_NEEDMOREPARAMS);
+		ft_sendMsg(cli.getFd(), "Server" ERR_NONICKNAMEGIVEN);
 		return false;
 	}
 	input.pop_front();
+	if (!nickSintax(input.front())) {
+		ft_sendMsg(cli.getFd(), input.front() + ERR_ERRONEUSNICKNAME);
+			return false;
+	}
 	for (size_t i = 0; i < _clients.size(); i++) {
 		if (input.front() == _clients[i].getNickname()) {
 			ft_sendMsg(cli.getFd(), input.front() + ERR_NICKNAMEINUSE);

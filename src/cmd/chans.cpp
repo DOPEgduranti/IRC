@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/10 16:28:37 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/11 11:09:55 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@ bool Server::join( Client & cli, std::deque<std::string> input ) {
 	std::cout << "debug: " << chans.front() << std::endl;
 	while (!chans.empty()) {
 		if (channelSintax(chans.front())) {
+			if (cli.getChannelNbr() >= MAX_JOINABLECHANNELS) {
+				ft_sendMsg(cli.getFd(), chans.front() + ERR_TOOMANYCHANNELS);
+				return false;
+			}
 			std::vector<Channel>::iterator it = std::find(_channels.begin(), _channels.end(), chans.front());
 			if (it != _channels.end())
 					cli.joinChannel(*it, key.front());
@@ -41,4 +45,8 @@ bool Server::join( Client & cli, std::deque<std::string> input ) {
 		key.pop_front();
 	}
 	return true;
+}
+
+bool Server::mode( Client & cli, std::deque<std::string> input ) {
+	
 }

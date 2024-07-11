@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:10:26 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/10 16:11:39 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/07/11 09:56:18 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ public:
 	Channel( std::string name, std::string key );
 	Channel( Channel const & other ) { *this = other; }
 	~Channel( void ) { }
-
 	Channel & operator=( Channel const & rhs );
 	bool operator==( Channel const & other ) const;
 	bool operator==( std::string const & str ) const;
@@ -43,7 +42,9 @@ public:
 	std::string getName( void ) const { return _name; }
 	std::string getKey( void ) const { return _key; }
 	std::string getTopic( void ) const { return _topic; }
+	
 	int getMaxUsers( void ) const { return _maxUsers; }
+	int getUsersNbr( void ) const { return _users.size(); }
 	bool getIviteOnly( void ) const { return _inviteOnly; }
 	bool getTopicRestricted( void ) const { return _topicRestricted; }
 	bool getKeyEnable( void ) const { return _keyEnable; }
