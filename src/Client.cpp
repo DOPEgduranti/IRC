@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:54:21 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/01 10:27:19 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/01 12:26:58 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ bool Client::joinChannel( Channel & chan, std::string key ) {
 		ERR_BADCHANNELKEY(_fd, _nickname, chan.getName());
 		return false;
 	}
-	_channels.push_back(chan);
 	chan.addUser(*this);
+	_channels.push_back(chan);
 	return true;
 }

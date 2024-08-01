@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/01 12:17:56 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/01 12:58:35 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,11 @@ bool Channel::userInvited( Client const & cli ) {
 	if (std::find(_invites.begin(), _invites.end(), cli) != _invites.end())
 		return true;
 	return false;
+}
+
+void Channel::broadcastMsg( Client & cli, std::string message ) {
+	for (size_t i = 0; i < _users.size(); i++) {
+		if (cli.getFd() != _users[i].getFd())
+			ft_sendMsg(_users[i].getFd(), ":" + cli.getNickname() + " PRIVMSG " + _name + " :" + message);
+	}
 }

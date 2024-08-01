@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 16:07:19 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/01 12:21:35 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ bool Server::join( Client & cli, std::deque<std::string> input ) {
 		key = ft_split(input.front(), ',');
 	while (key.size() < chans.size())
 		key.push_back("");
-	std::cout << "debug: " << chans.front() << std::endl;
 	while (!chans.empty()) {
 		if (channelSintax(chans.front())) {
 			if (cli.getChannelNbr() >= MAX_JOINABLECHANNELS) {
