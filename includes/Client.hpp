@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:44 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 11:01:19 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/01 10:44:01 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,14 @@ public:
 	Client & operator=( Client const & rhs );
 	bool operator==( Client const & other ) const;
 	bool operator==( int const & fd ) const;
+	bool operator==( std::string const & nick ) const;
 
 	int getFd( void ) const { return _fd; }
 	std::string getIpAddr( void ) const { return _ipAddr; }
 	std::string getUsername( void ) const { return _username; }
 	std::string getNickname( void ) const { return _nickname; }
+	std::string getRealName( void ) const { return _realname; }
+	std::string getHostName( void ) const { return _hostname; }
 	bool getLogged( void ) const { return _logged; }
 	int getChannelNbr( void ) const { return _channels.size(); }
 	

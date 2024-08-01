@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:24:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 16:45:54 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/01 10:45:40 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ bool Server::help( Client & cli, std::deque<std::string> input ) {
 
 bool Server::ping( Client & cli, std::deque<std::string> input ) {
 	input.pop_front();
-	ft_sendMsg(cli.getFd(), ":server " + cli.getNickname() + " PONG :" + input.front());
+	ft_sendMsg(cli.getFd(), ":server PONG " + cli.getNickname() + " " + input.front());
 	return true;
 }
 
@@ -39,14 +39,27 @@ bool Server::pong( Client & cli, std::deque<std::string> input ) {
 }
 
 bool Server::who( Client & cli, std::deque<std::string> input ) {
-(void)cli;
-	(void)input;
+	input.pop_front();
+	if (input.front() == cli.getNickname())
+		ft_sendMsg(cli.getFd(), ":server 352 " + cli.getNickname() + " :<hopcount> " + cli.getRealName());
+	ft_sendMsg(cli.getFd(), ":server 315 " + cli.getNickname() + " :End of /WHO list");
 	return true ;
 }
 
 bool Server::userhost( Client & cli, std::deque<std::string> input ) {
-	(void)cli;
-	(void)input;
+	if (input.size() > 6)
+		return false;
+	input.pop_front();
+	std::string message = ":server 302 " + cli.getNickname() + " :";
+	while (!input.empty()) {
+		std::vector<Client>::iterator tmp = std::find(_clients.begin(), _clients.end(), input.front());
+		if (tmp != _clients.end()) {
+			message += (*tmp).getNickname() + "=+" + (*tmp).getHostName();
+		}
+		input.pop_front();
+	}
+	message += "\r\n";
+	send(cli.getFd(), message.c_str(), message.size(), 0);
 	return true ;
 }
 

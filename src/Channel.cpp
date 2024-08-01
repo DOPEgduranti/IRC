@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 16:05:23 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/01 11:00:19 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void Channel::addUser( Client & cli ) {
 	if (_users.size() == 1)
 		_operators.push_back(cli);
 	if (_topic.empty())
-		ft_sendMsg(cli.getFd(), ":server 332 " + cli.getNickname() + " " + _name + " :No topic is set");
+		ft_sendMsg(cli.getFd(), ":server 331 " + cli.getNickname() + " " + _name + " :No topic is set");
 	else
 		ft_sendMsg(cli.getFd(), ":server 332 " + cli.getNickname() + " " + _name + " :" + _topic);
 	std::string mess = ":server 353 " + cli.getNickname() + " " + _name + " :" ;
@@ -71,6 +71,8 @@ void Channel::addUser( Client & cli ) {
 		if (i < _users.size() - 1)
 			mess += " ";
 	}
+	ft_sendMsg(cli.getFd(), mess);
+	mess = ":server 366 " + cli.getNickname() + " " + _name + " :End of /NAMES list";
 	ft_sendMsg(cli.getFd(), mess);
 	std::cout << _name << ": Client <" << cli.getFd() << "> joined the channel" << std::endl;
 }

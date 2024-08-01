@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:54:21 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 15:58:46 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/01 10:27:19 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,12 @@ bool Client::operator==( Client const & other ) const {
 
 bool Client::operator==( int const & fd ) const {
 	if (_fd == fd)
+		return true;
+	return false;
+}
+
+bool Client::operator==( std::string const & nick ) const {
+	if (_nickname == nick)
 		return true;
 	return false;
 }

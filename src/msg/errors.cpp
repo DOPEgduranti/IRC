@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:59:38 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 15:52:26 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/01 11:08:57 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void ERR_NONICKNAMEGIVEN( int fd, std::string nickname ) {
 }
 
 void ERR_NICKNAMEINUSE( int fd, std::string nickname ) {
-	std::string message = ":server 433 " + nickname + " " + nickname + " :No nickname given\r\n" ;
+	std::string message = ":server 433 " + nickname + " " + nickname + " :Nickname is already in use\r\n" ;
 	send(fd, message.c_str(), message.size(), 0);
 }
 
