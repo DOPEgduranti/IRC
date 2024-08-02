@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:59:38 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/01 11:08:57 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/02 13:02:44 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,15 @@ void ERR_NOSUCHNICK( int fd, std::string nickname ) {
 
 void ERR_NOTEXTTOSEND( int fd, std::string nickname ) {
 	std::string message = ":server 412 " + nickname + " :No text to send\r\n" ;
+	send(fd, message.c_str(), message.size(), 0);
+}
+
+void ERR_NOTONCHANNEL (int fd, std::string nickname, std::string channelName) {
+	std::string message = ":server 442 " + nickname + " " + channelName + " :You’re not on that channel\r\n" ;
+	send(fd, message.c_str(), message.size(), 0);
+}
+
+void ERR_UNKNOWNMODE( int fd, std::string nickname, std::string c ) {
+	std::string message = ":server 472 " + nickname + " " + c + " :is unknown mode char to me\r\n" ;
 	send(fd, message.c_str(), message.size(), 0);
 }

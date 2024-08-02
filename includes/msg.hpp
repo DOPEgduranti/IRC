@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:57:24 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 15:55:36 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/02 13:01:13 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 # define ERR_KEYSET /*<channel>*/ " :Channel key already set"
 // # define ERR_TOOMANYCHANNELS /*<channel name>*/ " :You have joined too many channels" //Sent to a user when they have joined the maximum number of allowed channels and they try to join another channel.
 // # define ERR_CHANNELISFULL /*<channel>*/ " :Cannot join channel (+l)" //Return when a client attempt to join a channel already full.
-# define ERR_UNKNOWNMODE /*<char>*/ " :is unknown mode char to me"
+// # define ERR_UNKNOWNMODE /*<char>*/ " :is unknown mode char to me"
 // # define ERR_INVITEONLYCHAN /*<channel>*/ " :Cannot join channel (+i)" //Return when a client attempt to join an invite only channel whitout invitation.
 # define ERR_BANNEDFROMCHAN /*<channel>*/ " :Cannot join channel (+b)" //Return when a client attempt to join a channel from which he was banned.
 // # define ERR_BADCHANNELKEY /*<channel>*/ " :Cannot join channel (+k)" //Return when a client attempt to join a channel using an invalid key.
@@ -141,10 +141,27 @@ void ERR_NOSUCHNICK( int fd, std::string nickname );
 /*
 	412 ERR_NOTEXTTOSEND
 	":No text to send"
-	Return when a user is trying to send a PRIVMSG
+	- Return when a user is trying to send a PRIVMSG
 	message and no message is provided
 */
 void ERR_NOTEXTTOSEND( int fd, std::string nickname );
+
+/*
+	442 ERR_NOTONCHANNEL
+	"<channel> :You’re not on that channel"
+	- Returned by the server whenever a client tries to
+	perform a channel effecting command for which the
+	client isn’t a member.
+*/
+void ERR_NOTONCHANNEL( int fd, std::string nickname, std::string channelName );
+
+/*
+	472 ERR_UNKNOWNMODE
+	"<char> :is unknown mode char to me"
+	- Returned when a client tries to use MODE command
+	passing an unknown mode character
+*/
+void ERR_UNKNOWNMODE( int fd, std::string nickname, std::string c );
 
 
 

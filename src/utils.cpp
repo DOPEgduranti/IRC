@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:51:47 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/02 11:42:10 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/02 15:09:04 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,15 +106,15 @@ bool nickSintax( std::string & str ) {
 }
 
 e_mode_cases modeCases( std::string & str ) {
-	if (str == "-i")
+	if (str == "-i" || str == "+i")
 		return eInvite;
-	if (str == "-t")
+	if (str == "-t" || str == "+t")
 		return eTopic;
-	if (str == "-k")
+	if (str == "-k" || str == "+k")
 		return eKey;
-	if (str == "-o")
+	if (str == "-o" || str == "+o")
 		return eOperator;
-	if (str == "-l")
+	if (str == "-l" || str == "+l")
 		return eLimit;
 	return eErr;
 }
