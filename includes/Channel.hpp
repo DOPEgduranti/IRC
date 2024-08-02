@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:10:26 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/01 12:49:55 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/02 11:47:34 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,19 @@ public:
 	std::string getName( void ) const { return _name; }
 	std::string getKey( void ) const { return _key; }
 	std::string getTopic( void ) const { return _topic; }
-	
 	int getMaxUsers( void ) const { return _maxUsers; }
 	int getUsersNbr( void ) const { return _users.size(); }
 	bool getIviteOnly( void ) const { return _inviteOnly; }
 	bool getTopicRestricted( void ) const { return _topicRestricted; }
 	bool getKeyEnable( void ) const { return _keyEnable; }
 	bool getUserLimit( void ) const { return _userLimit; }
+	std::vector<Client> getUsers( void ) const { return _users; }
+	std::vector<Client> getOperators( void ) const { return _operators; }
+	
+	void setInviteOnly( void );
+	void setTopicRestricted( void );
+	void setKeyEnable( std::string & str );
+	void setUserLimit( int n );
 
 	void addUser( Client & cli );
 	void addOperator( Client & cli );

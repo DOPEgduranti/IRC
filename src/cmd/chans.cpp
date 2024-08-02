@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/01 12:21:35 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/02 11:48:42 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,61 @@ bool Server::join( Client & cli, std::deque<std::string> input ) {
 }
 
 bool Server::mode( Client & cli, std::deque<std::string> input ) {
+	input.pop_front();
+	if (std::find(cli.getChannels().begin(), cli.getChannels().end(), input.front()) == cli.getChannels().end())
+		return false;
+	std::vector<Channel>::iterator chan = std::find(_channels.begin(), _channels.end(), input.front());
+	if (std::find((*chan).getOperators().begin(), (*chan).getOperators().end(), cli) == (*chan).getOperators().end())
+		return false;
+	input.pop_front();
+	std::vector<Client>::iterator tmp;
+	switch (modeCases(input.front())) {
+	case eInvite:
+		(*chan).setInviteOnly();
+		break;
+	case eTopic:
+		(*chan).setTopicRestricted();
+		break;
+	case eKey:
+		input.pop_front();
+		if (input.empty())
+			break;
+		(*chan).setKeyEnable(input.front());
+		break;
+	case eOperator:
+		input.pop_front();
+		if (input.empty())
+			break;
+		tmp = std::find(_clients.begin(), _clients.end(), input.front());
+		if (tmp == _clients.end())
+			break;
+		(*chan).addOperator(*tmp);
+		break;
+	case eLimit:
+		input.pop_front();
+		if (input.empty())
+			break;
+		(*chan).setUserLimit(validPositiveInteger(input.front()));
+		break;
+	default:
+		break;
+	}
+	return true;
+}
+
+bool Server::kick( Client & cli, std::deque<std::string> input ) {
+	(void)cli;
+	(void)input;
+	return true;
+}
+
+bool Server::invite( Client & cli, std::deque<std::string> input ) {
+	(void)cli;
+	(void)input;
+	return true;
+}
+
+bool Server::topic( Client & cli, std::deque<std::string> input ) {
 	(void)cli;
 	(void)input;
 	return true;

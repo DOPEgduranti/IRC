@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 16:43:59 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/02 09:51:50 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ Server::Server( std::string port, std::string key ) : _port(static_cast<int>(std
 	_cmds.insert(functions("PRIVMSG", &Server::privmsg));
 	_cmds.insert(functions("JOIN", &Server::join));
 	_cmds.insert(functions("MODE", &Server::mode));
+	_cmds.insert(functions("KICK", &Server::kick));
+	_cmds.insert(functions("INVITE", &Server::invite));
+	_cmds.insert(functions("TOPIC", &Server::topic));
 	_cmds.insert(functions("HELP", &Server::help));
 	_cmds.insert(functions("PING", &Server::ping));
 	_cmds.insert(functions("PONG", &Server::pong));

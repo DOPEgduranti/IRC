@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/01 12:58:35 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/02 11:47:42 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,44 @@ bool Channel::operator==( std::string const & str ) const {
 	return false;
 }
 
+void Channel::setInviteOnly( void ) {
+	if (_inviteOnly == true)
+		_inviteOnly = false;
+	else
+		_inviteOnly = true;
+}
+
+void Channel::setTopicRestricted( void ) {
+	if (_topicRestricted == true)
+		_topicRestricted = false;
+	else
+		_topicRestricted = true;
+}
+
+void Channel::setKeyEnable( std::string & str ) {
+	if (_keyEnable == true) {
+		_key.clear();
+		_keyEnable = false;
+	}
+	else {
+		_key = str;
+		_keyEnable = true;
+	}
+}
+
+void Channel::setUserLimit( int n ) {
+	if (_userLimit == true) {
+		_maxUsers = 0;
+		_userLimit = false;
+	}
+	else {
+		if (n > 0) {
+			_userLimit = n;
+			_userLimit = true;
+		}
+	}
+}
+
 void Channel::addUser( Client & cli ) {
 	std::vector<Client>::iterator it = find(_users.begin(), _users.end(), cli);
 	if (it != _users.end())
@@ -76,6 +114,13 @@ void Channel::addUser( Client & cli ) {
 	for (size_t i = 0; i < _users.size(); i++)
 		ft_sendMsg(_users[i].getFd(), ":" + cli.getNickname() + " JOIN :" + _name);
 	std::cout << _name << ": Client <" << cli.getFd() << "> joined the channel" << std::endl;
+}
+
+void Channel::addOperator( Client & cli ) {
+	if (std::find(_operators.begin(), _operators.end(), cli) != _operators.end())
+		_operators.erase(std::find(_operators.begin(), _operators.end(), cli));
+	else if (std::find(_users.begin(), _users.end(), cli) != _users.end())
+		_operators.push_back(cli);
 }
 
 void Channel::removeUser( Client & cli ) {

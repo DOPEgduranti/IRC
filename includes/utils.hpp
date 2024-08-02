@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:51:58 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 10:20:01 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/02 11:42:11 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,16 @@
 # include <cstdlib>
 # include <deque>
 # include <msg.hpp>
+# include <climits>
+
+enum e_mode_cases {
+	eErr = -1,
+	eInvite,
+	eTopic,
+	eKey,
+	eOperator,
+	eLimit
+};
 
 bool portKeyCheck( std::string port, std::string key );
 int ft_sendMsg( int fd, std::string msg );
@@ -40,5 +50,7 @@ std::string ft_erase( std::string & str, char c );
 std::string ft_erase( std::string & str, std::string set );
 bool channelSintax( std::string & str );
 bool nickSintax( std::string & str );
+e_mode_cases modeCases( std::string & str );
+int validPositiveInteger( std::string & str );
 
 #endif
