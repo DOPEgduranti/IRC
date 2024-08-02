@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:57:24 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/02 13:01:13 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/02 15:46:38 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 // # define ERR_INVITEONLYCHAN /*<channel>*/ " :Cannot join channel (+i)" //Return when a client attempt to join an invite only channel whitout invitation.
 # define ERR_BANNEDFROMCHAN /*<channel>*/ " :Cannot join channel (+b)" //Return when a client attempt to join a channel from which he was banned.
 // # define ERR_BADCHANNELKEY /*<channel>*/ " :Cannot join channel (+k)" //Return when a client attempt to join a channel using an invalid key.
-# define ERR_CHANOPRIVSNEEDED /*<channel>*/ " :You’re not channel operator" //Any command requiring ’chanop’ privileges (such as MODE messages) must return this error if the client making the attempt is not a chanop on the specified channel.
+// # define ERR_CHANOPRIVSNEEDED /*<channel>*/ " :You’re not channel operator" //Any command requiring ’chanop’ privileges (such as MODE messages) must return this error if the client making the attempt is not a chanop on the specified channel.
 // # define ERR_NORECIPIENT ":No recipient given " //(":No recipient given (<command>)") Return when you miss a target
 // # define ERR_CANNOTSENDTOCHAN /*<channel name>*/ " :Cannot send to channel" //Sent to a user who is not on a channel and is trying to send a PRIVMSG message to that channel.
 // # define ERR_NOSUCHNICK /*<nick>*/ " :No such nick/channel" //Used to indicate the nickname parameter supplied to a command is currently unused.
@@ -162,6 +162,22 @@ void ERR_NOTONCHANNEL( int fd, std::string nickname, std::string channelName );
 	passing an unknown mode character
 */
 void ERR_UNKNOWNMODE( int fd, std::string nickname, std::string c );
+
+/*
+	403 ERR_NOSUCHCHANNEL
+	"<channel name> :No such channel"
+	- Used to indicate the given channel name is invalid.
+*/
+void ERR_NOSUCHCHANNEL( int fd, std::string nickname, std::string channelName );
+
+/*
+	482 ERR_CHANOPRIVSNEEDED
+	"<channel> :You’re not channel operator"
+	- Any command requiring ’chanop’ privileges (such as
+	MODE messages) must return this error if the client
+	making the attempt is not a chanop on the specified channel.
+*/
+void ERR_CHANOPRIVSNEEDED( int fd, std::string nickname, std::string channelName );
 
 
 

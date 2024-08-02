@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:59:38 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/02 13:02:44 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/02 15:47:17 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,15 @@ void ERR_NOTONCHANNEL (int fd, std::string nickname, std::string channelName) {
 
 void ERR_UNKNOWNMODE( int fd, std::string nickname, std::string c ) {
 	std::string message = ":server 472 " + nickname + " " + c + " :is unknown mode char to me\r\n" ;
+	send(fd, message.c_str(), message.size(), 0);
+}
+
+void ERR_NOSUCHCHANNEL( int fd, std::string nickname, std::string channelName ) {
+	std::string message = ":server 403 " + nickname + " " + channelName + " :No such channel\r\n" ;
+	send(fd, message.c_str(), message.size(), 0);
+}
+
+void ERR_CHANOPRIVSNEEDED( int fd, std::string nickname, std::string channelName ) {
+	std::string message = ":server 482 " + nickname + " " + channelName + " :You’re not channel operator\r\n" ;
 	send(fd, message.c_str(), message.size(), 0);
 }

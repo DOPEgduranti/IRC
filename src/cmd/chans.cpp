@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/02 15:27:05 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/02 15:49:05 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,24 @@ bool Server::join( Client & cli, std::deque<std::string> input ) {
 }
 
 bool Server::mode( Client & cli, std::deque<std::string> input ) {
+	if (input.size() < 3) {
+		ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "MODE");
+		return false;
+	}
 	input.pop_front();
-	if (std::find(cli.getChannels().begin(), cli.getChannels().end(), input.front()) == cli.getChannels().end())
-		return false;
 	std::vector<Channel>::iterator chan = std::find(_channels.begin(), _channels.end(), input.front());
-	if (std::find((*chan).getOperators().begin(), (*chan).getOperators().end(), cli) == (*chan).getOperators().end())
+	if (chan == _channels.end()) {
+		ERR_NOSUCHCHANNEL(cli.getFd(), cli.getNickname(), input.front());
 		return false;
+	}
+	if (std::find((*chan).getUsers().begin(), (*chan).getUsers().end(), input.front()) == (*chan).getUsers().end()) {
+		ERR_NOTONCHANNEL(cli.getFd(), cli.getNickname(), input.front());
+		return false;
+	}
+	if (std::find((*chan).getOperators().begin(), (*chan).getOperators().end(), cli) == (*chan).getOperators().end()) {
+		ERR_CHANOPRIVSNEEDED(cli.getFd(), cli.getNickname(), input.front());
+		return false;
+	}
 	input.pop_front();
 	std::vector<Client>::iterator tmp;
 	switch (modeCases(input.front())) {
