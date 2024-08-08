@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:59:38 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/02 15:47:17 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/07 10:13:02 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ void ERR_CANNOTSENDTOCHAN( int fd, std::string nickname, std::string channelName
 	send(fd, message.c_str(), message.size(), 0);
 }
 
-void ERR_NOSUCHNICK( int fd, std::string nickname ) {
-	std::string message = ":server 401 " + nickname + " " + nickname + " :No such nick/channel\r\n" ;
+void ERR_NOSUCHNICK( int fd, std::string userNick, std::string nickname ) {
+	std::string message = ":server 401 " + userNick + " " + nickname + " :No such nick/channel\r\n" ;
 	send(fd, message.c_str(), message.size(), 0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:10:26 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/02 15:26:52 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:04:06 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ public:
 	void manageOperator( Client & cli, std::string & str );
 	void removeUser( Client & cli );
 	bool userInvited( Client const & cli );
+	void inviteUser( Client & cli );
 	void broadcastMsg( Client & cli, std::string message );
 };
 

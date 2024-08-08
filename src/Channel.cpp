@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/02 15:32:50 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:28:45 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,12 +132,20 @@ void Channel::manageOperator( Client & cli, std::string & str ) {
 void Channel::removeUser( Client & cli ) {
 	if (std::find(_users.begin(), _users.end(), cli) != _users.end())
 		_users.erase(std::find(_users.begin(), _users.end(), cli));
+	if (std::find(_operators.begin(), _operators.end(), cli) != _operators.end())
+		_operators.erase(std::find(_operators.begin(), _operators.end(), cli));
 }
 
 bool Channel::userInvited( Client const & cli ) {
 	if (std::find(_invites.begin(), _invites.end(), cli) != _invites.end())
 		return true;
 	return false;
+}
+
+void Channel::inviteUser( Client & cli ) {
+	if (std::find(_invites.begin(), _invites.end(), cli) != _invites.end())
+		return ;
+	_invites.push_back(cli);
 }
 
 void Channel::broadcastMsg( Client & cli, std::string message ) {

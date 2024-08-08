@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/02 15:49:05 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:57:54 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ bool Server::mode( Client & cli, std::deque<std::string> input ) {
 		}
 		tmp = std::find((*chan).getUsers().begin(), (*chan).getUsers().end(), input[1]);
 		if (tmp == (*chan).getUsers().end()) {
-			ERR_NOSUCHNICK(cli.getFd(), input[1]);
+			ERR_NOSUCHNICK(cli.getFd(), cli.getNickname(), input[1]);
 			break;
 		}
 		(*chan).manageOperator(*tmp, input.front());
@@ -100,14 +100,71 @@ bool Server::mode( Client & cli, std::deque<std::string> input ) {
 }
 
 bool Server::kick( Client & cli, std::deque<std::string> input ) {
-	(void)cli;
-	(void)input;
+	if (input.size() < 3) {
+		ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "KICK");
+		return false;
+	}
+	input.pop_front();
+	std::vector<Channel>::iterator ch = std::find(_channels.begin(), _channels.end(), input.front());
+	if (ch == _channels.end()) {
+		ERR_NOSUCHCHANNEL(cli.getFd(), cli.getNickname(), input.front());
+		return false;
+	}
+	input.pop_front();
+	std::vector<Client>::iterator cl = std::find(_clients.begin(), _clients.end(), input.front());
+	if (cl == _clients.end()) {
+		ERR_NOSUCHNICK(cli.getFd(), cli.getNickname(), input.front());
+		return false;
+	}
+	if (std::find((*ch).getUsers().begin(), (*ch).getUsers().end(), cli) == (*ch).getUsers().end()) {
+		ERR_NOTONCHANNEL(cli.getFd(), cli.getNickname(), (*ch).getName());
+		return false;
+	}
+	if (std::find((*ch).getOperators().begin(), (*ch).getOperators().end(), cli) == (*ch).getOperators().end()) {
+		ERR_CHANOPRIVSNEEDED(cli.getFd(), cli.getNickname(), (*ch).getName());
+		return false;
+	}
+	input.pop_front();
+	if (std::find((*ch).getOperators().begin(), (*ch).getOperators().end(), *cl) == (*ch).getOperators().end()) {
+		ft_sendMsg(cli.getFd(), ":" + (*ch).getName() + " " + cli.getNickname() + " :user " + (*cl).getNickname() + " not in channel\r\n");
+		return false;
+	}
+	(*ch).removeUser(*cl);
+	Client tmp;
+	tmp.setFd(-1);
+	tmp.setNickname((*ch).getName());
+	if (input.empty())
+		(*ch).broadcastMsg(tmp, "Kick " + (*cl).getNickname() + " from " + (*ch).getName());
+	else
+		(*ch).broadcastMsg(tmp, "Kick " + (*cl).getNickname() + " from " + (*ch).getName() + " using \"" + input.front() + "\" as the reason.");
 	return true;
 }
 
 bool Server::invite( Client & cli, std::deque<std::string> input ) {
-	(void)cli;
-	(void)input;
+	if (input.size() < 3) {
+		ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "INVITE");
+		return false;
+	}
+	input.pop_front();
+	std::vector<Client>::iterator cl = std::find(_clients.begin(), _clients.end(), input.front());
+	if (cl == _clients.end()) {
+		ERR_NOSUCHNICK(cli.getFd(), cli.getNickname(), input.front());
+		return false;
+	}
+	input.pop_front();
+	std::vector<Channel>::iterator ch = std::find(_channels.begin(), _channels.end(), input.front());
+	if (ch == _channels.end()) {
+		ERR_NOSUCHCHANNEL(cli.getFd(), cli.getNickname(), input.front());
+		return false;
+	}
+	if ((*ch).getIviteOnly() == true) {
+		if (std::find((*ch).getOperators().begin(), (*ch).getOperators().end(), cli) == (*ch).getOperators().end()) {
+			ERR_CHANOPRIVSNEEDED(cli.getFd(), cli.getNickname(), (*ch).getName());
+			return false;
+		}
+	}
+	(*ch).inviteUser(*cl);
+	RPL_INVITING(cli.getFd(), cli.getNickname(), (*ch).getName(), (*cl).getNickname());
 	return true;
 }
 
