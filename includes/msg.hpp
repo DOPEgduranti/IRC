@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:57:24 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/08 10:20:47 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/08 11:11:11 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,21 @@ void RPL_CREATED( int fd, std::string nickname );
 	- Part of the post-registration greeting
 */
 void RPL_MYINFO( int fd, std::string nickname );
+
+/*
+	331 RPL_NOTOPIC
+	"<channel> :No topic is set"
+*/
+void RPL_NOTOPIC( int fd, std::string nickname, std::string channel );
+
+/*
+	332 RPL_TOPIC
+	"<channel> :<topic>"
+	- When sending a TOPIC message to determine the
+	channel topic, one of two replies is sent. If the
+	topic is set, RPL_TOPIC is sent back else RPL_NOTOPIC.
+*/
+void RPL_TOPIC( int fd, std::string nickname, std::string channel, std::string topic );
 
 /*
 	341 RPL_INVITING

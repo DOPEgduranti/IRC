@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:10:26 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/08 10:04:06 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/08 11:25:54 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ public:
 	std::vector<Client> getUsers( void ) const { return _users; }
 	std::vector<Client> getOperators( void ) const { return _operators; }
 	
+	void setTopic( std::string & str ) { _topic = str; }
 	void setInviteOnly( std::string & str );
 	void setTopicRestricted( std::string & str );
 	bool setKeyEnable( std::deque<std::string> input );

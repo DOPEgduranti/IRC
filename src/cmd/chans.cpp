@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/08 10:57:54 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/08 11:30:45 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,10 @@ bool Server::invite( Client & cli, std::deque<std::string> input ) {
 		ERR_NOSUCHCHANNEL(cli.getFd(), cli.getNickname(), input.front());
 		return false;
 	}
+	if (std::find((*ch).getUsers().begin(), (*ch).getUsers().end(), cli) == (*ch).getUsers().end()) {
+		ERR_NOTONCHANNEL(cli.getFd(), cli.getNickname(), (*ch).getName());
+		return false;
+	}
 	if ((*ch).getIviteOnly() == true) {
 		if (std::find((*ch).getOperators().begin(), (*ch).getOperators().end(), cli) == (*ch).getOperators().end()) {
 			ERR_CHANOPRIVSNEEDED(cli.getFd(), cli.getNickname(), (*ch).getName());
@@ -169,7 +173,37 @@ bool Server::invite( Client & cli, std::deque<std::string> input ) {
 }
 
 bool Server::topic( Client & cli, std::deque<std::string> input ) {
-	(void)cli;
-	(void)input;
+	if (input.size() < 2) {
+		ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "TOPIC");
+		return false;
+	}
+	input.pop_front();
+	std::vector<Channel>::iterator ch = std::find(_channels.begin(), _channels.end(), input.front());
+	if (ch == _channels.end()) {
+		ERR_NOSUCHCHANNEL(cli.getFd(), cli.getNickname(), input.front());
+		return false;
+	}
+	if (std::find((*ch).getUsers().begin(), (*ch).getUsers().end(), cli) == (*ch).getUsers().end()) {
+		ERR_NOTONCHANNEL(cli.getFd(), cli.getNickname(), (*ch).getName());
+		return false;
+	}
+	input.pop_front();
+	if (input.empty()) {
+		if ((*ch).getTopic().empty())
+			RPL_NOTOPIC(cli.getFd(), cli.getNickname(), (*ch).getName());
+		else
+			RPL_TOPIC(cli.getFd(), cli.getNickname(), (*ch).getName(), (*ch).getTopic());
+	}
+	else {
+		if ((*ch).getTopicRestricted() == true && std::find((*ch).getOperators().begin(), (*ch).getOperators().end(), cli) == (*ch).getOperators().end()) {
+			ERR_CHANOPRIVSNEEDED(cli.getFd(), cli.getNickname(), (*ch).getName());
+			return false;
+		}
+		(*ch).setTopic(input.front());
+		Client tmp;
+		tmp.setFd(-1);
+		tmp.setNickname(cli.getNickname());
+		(*ch).broadcastMsg(tmp, "set the topic on " + (*ch).getName() + " to \"" + input.front() + "\".");
+	}
 	return true;
 }

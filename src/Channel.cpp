@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/08 10:28:45 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/08 11:15:18 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,9 @@ void Channel::addUser( Client & cli ) {
 	if (_users.size() == 1)
 		_operators.push_back(cli);
 	if (_topic.empty())
-		ft_sendMsg(cli.getFd(), ":server 331 " + cli.getNickname() + " " + _name + " :No topic is set");
+		RPL_NOTOPIC(cli.getFd(), cli.getNickname(), _name);
 	else
-		ft_sendMsg(cli.getFd(), ":server 332 " + cli.getNickname() + " " + _name + " :" + _topic);
+		RPL_TOPIC(cli.getFd(), cli.getNickname(), _name, _topic);
 	std::string mess = ":server 353 " + cli.getNickname() + " = " + _name + " :" ;
 	for (size_t i = 0; i < _users.size(); i++) {
 		if (std::find(_operators.begin(), _operators.end(), _users[i]) != _operators.end())
