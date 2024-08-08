@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:44 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/02 10:39:12 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/08 11:38:05 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ public:
 	void setIpAddr( std::string ipAdd ) { _ipAddr = ipAdd; }
 	void setNickname( std::string nickname ) { _nickname = nickname; }
 	void setUser( std::string username, std::string hostname, std::string servername, std::string realname );
+	void quitChannel( Channel & chan ) { _channels.erase(std::find(_channels.begin(), _channels.end(), chan)); }
 
 	void login( void ) { _logged = true; }
 	bool joinChannel( Channel & chan, std::string key );

@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/08 11:15:18 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/08 11:38:10 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,8 +130,10 @@ void Channel::manageOperator( Client & cli, std::string & str ) {
 }
 
 void Channel::removeUser( Client & cli ) {
-	if (std::find(_users.begin(), _users.end(), cli) != _users.end())
+	if (std::find(_users.begin(), _users.end(), cli) != _users.end()) {
+		cli.quitChannel(*this);
 		_users.erase(std::find(_users.begin(), _users.end(), cli));
+	}
 	if (std::find(_operators.begin(), _operators.end(), cli) != _operators.end())
 		_operators.erase(std::find(_operators.begin(), _operators.end(), cli));
 }
