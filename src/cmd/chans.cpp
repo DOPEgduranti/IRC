@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/08 11:34:21 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/20 14:55:14 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ bool Server::kick( Client & cli, std::deque<std::string> input ) {
 	(*ch).removeUser(*cl);
 	Client tmp;
 	tmp.setFd(-1);
-	tmp.setNickname((*ch).getName());
+	tmp.setNickname(cli.getNickname());
 	if (input.empty())
 		(*ch).broadcastMsg(tmp, "Kick " + (*cl).getNickname() + " from " + (*ch).getName());
 	else
