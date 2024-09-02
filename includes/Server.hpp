@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:42 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/02 09:50:30 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/02 10:36:04 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ public:
 	bool kick( Client & cli, std::deque<std::string> input );
 	bool invite( Client & cli, std::deque<std::string> input );
 	bool topic( Client & cli, std::deque<std::string> input );
+	bool part( Client & cli, std::deque<std::string> input );
 	
 	bool help( Client & cli, std::deque<std::string> input );
 	bool ping( Client & cli, std::deque<std::string> input );

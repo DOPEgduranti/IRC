@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 13:10:36 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/20 12:16:20 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/21 10:35:01 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void RPL_INVITING( int fd, std::string userNick, std::string channel, std::strin
 }
 
 void RPL_NOTOPIC( int fd, std::string nickname, std::string channel ) {
-	std::string message = ":server 331 " + nickname + " " + channel + " No topic is set:\r\n";
+	std::string message = ":server 331 " + nickname + " " + channel + " :No topic is set\r\n";
 	send(fd, message.c_str(), message.size(), 0);
 }
 

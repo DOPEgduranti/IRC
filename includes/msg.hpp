@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:57:24 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/08 11:11:11 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/08/20 16:02:26 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 # include <sys/socket.h>
 
 # define ERR_NOTREGISTERED " :You have not registered" //Returned by the server to indicate that the client must be registered before the server will allow it to be parsed in detail.
-# define ERR_NOPRIVILEGES ":Permission Denied- You’re not an IRC operator" //Any command requiring operator privileges to operate must return this error to indicate the attempt was unsuccessful.
-# define ERR_KEYSET /*<channel>*/ " :Channel key already set"// # define ERR_INVITEONLYCHAN /*<channel>*/ " :Cannot join channel (+i)" //Return when a client attempt to join an invite only channel whitout invitation.
+# define ERR_NOPRIVILEGES " :Permission Denied- You’re not an IRC operator" //Any command requiring operator privileges to operate must return this error to indicate the attempt was unsuccessful.
+# define ERR_KEYSET /*<channel>*/ " :Channel key already set" // # define ERR_INVITEONLYCHAN /*<channel>*/ " :Cannot join channel (+i)" //Return when a client attempt to join an invite only channel whitout invitation.
 # define ERR_BANNEDFROMCHAN /*<channel>*/ " :Cannot join channel (+b)" //Return when a client attempt to join a channel from which he was banned.
 
 // errors.cpp

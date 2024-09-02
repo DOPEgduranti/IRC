@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/20 14:55:14 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/02 10:59:05 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,10 @@ bool Server::kick( Client & cli, std::deque<std::string> input ) {
 		return false;
 	}
 	input.pop_front();
+	if (cli.getNickname() == input.front()) {
+		ft_sendMsg(cli.getFd(), "you cannot kick yourself from a channel. Try PART command instead");
+		return false;
+	}
 	std::vector<Client>::iterator cl = std::find(_clients.begin(), _clients.end(), input.front());
 	if (cl == _clients.end()) {
 		ERR_NOSUCHNICK(cli.getFd(), cli.getNickname(), input.front());
@@ -125,7 +129,7 @@ bool Server::kick( Client & cli, std::deque<std::string> input ) {
 		return false;
 	}
 	input.pop_front();
-	if (std::find((*ch).getOperators().begin(), (*ch).getOperators().end(), *cl) == (*ch).getOperators().end()) {
+	if (std::find((*ch).getUsers().begin(), (*ch).getUsers().end(), *cl) == (*ch).getUsers().end()) {
 		ft_sendMsg(cli.getFd(), ":" + (*ch).getName() + " " + cli.getNickname() + " :user " + (*cl).getNickname() + " not in channel\r\n");
 		return false;
 	}
@@ -205,5 +209,26 @@ bool Server::topic( Client & cli, std::deque<std::string> input ) {
 		tmp.setNickname(cli.getNickname());
 		(*ch).broadcastMsg(tmp, "set the topic on " + (*ch).getName() + " to \"" + input.front() + "\".");
 	}
+	return true;
+}
+
+bool Server::part( Client & cli, std::deque<std::string> input ) {
+	if (input.size() < 2) {
+		ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "PART");
+		return false;
+	}
+	do {
+		input.pop_front();
+		std::vector<Channel>::iterator ch = std::find(_channels.begin(), _channels.end(), input.front());
+		if (ch == _channels.end())
+			ERR_NOSUCHCHANNEL(cli.getFd(), cli.getNickname(), input.front());
+		else if (std::find((*ch).getUsers().begin(), (*ch).getUsers().end(), cli) == (*ch).getUsers().end())
+			ERR_NOTONCHANNEL(cli.getFd(), cli.getNickname(), (*ch).getName());
+		else {
+			(*ch).removeUser(cli);
+			(*ch).broadcastMsg(cli, "user " + cli.getNickname() + " leaved the channel");
+			ft_sendMsg(cli.getFd(), "leave channel '" + (*ch).getName() + "'");
+		}
+	} while (!input.empty());
 	return true;
 }

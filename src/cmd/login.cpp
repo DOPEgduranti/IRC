@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:20:31 by gduranti          #+#    #+#             */
-/*   Updated: 2024/07/11 16:11:06 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/02 10:32:04 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ bool Server::user( Client & cli, std::deque<std::string> input ) {
 	RPL_WELCOME(cli.getFd(), cli.getNickname());
 	RPL_YOURHOST(cli.getFd(), cli.getNickname());
 	RPL_CREATED(cli.getFd(), cli.getNickname());
-	// RPL_MYINFO(cli.getFd(), cli.getNickname());
+	RPL_MYINFO(cli.getFd(), cli.getNickname());
 	return true;
 }
 
