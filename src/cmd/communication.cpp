@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 11:36:09 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/20 11:58:44 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/02 15:53:05 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool Server::privmsg( Client & cli, std::deque<std::string> input ) {
 		std::vector<Channel>::iterator tmp2 = std::find(_channels.begin(), _channels.end(), input.front());
 		if (tmp1 != _clients.end())
 			ft_sendMsg((*tmp1).getFd(), ":" + cli.getNickname() + " PRIVMSG " + input.front() + " :" + message);
-		else if (tmp2 != _channels.end())
+		else if (tmp2 != _channels.end() && std::find(cli.getChannels().begin(), cli.getChannels().end(), *tmp2) != cli.getChannels().end())
 			(*tmp2).broadcastMsg(cli, message);
 		else
 			ERR_NOSUCHNICK(cli.getFd(), cli.getNickname(), input.front());

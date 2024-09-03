@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/02 10:59:05 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/02 15:41:25 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,9 +226,12 @@ bool Server::part( Client & cli, std::deque<std::string> input ) {
 			ERR_NOTONCHANNEL(cli.getFd(), cli.getNickname(), (*ch).getName());
 		else {
 			(*ch).removeUser(cli);
-			(*ch).broadcastMsg(cli, "user " + cli.getNickname() + " leaved the channel");
-			ft_sendMsg(cli.getFd(), "leave channel '" + (*ch).getName() + "'");
+			Client tmp;
+			tmp.setFd(-1);
+			tmp.setNickname(cli.getNickname());
+			(*ch).broadcastMsg(tmp, "user " + cli.getNickname() + " leaved the channel");
+			ft_sendMsg(cli.getFd(), ":server " + cli.getNickname() + " :leave channel '" + (*ch).getName() + "'");
 		}
-	} while (!input.empty());
+	} while (input.size() > 1);
 	return true;
 }
