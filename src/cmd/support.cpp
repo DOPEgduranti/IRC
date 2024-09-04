@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:24:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/01 13:01:01 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/03 11:54:17 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,10 @@ bool Server::help( Client & cli, std::deque<std::string> input ) {
 }
 
 bool Server::ping( Client & cli, std::deque<std::string> input ) {
+	if (input.size() < 2) {
+		ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "PING");
+		return false;
+	}
 	input.pop_front();
 	ft_sendMsg(cli.getFd(), ":server PONG " + cli.getNickname() + " " + input.front());
 	return true;

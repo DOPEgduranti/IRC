@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/02 15:41:25 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/03 11:00:14 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,6 @@ bool Server::kick( Client & cli, std::deque<std::string> input ) {
 		ft_sendMsg(cli.getFd(), ":" + (*ch).getName() + " " + cli.getNickname() + " :user " + (*cl).getNickname() + " not in channel\r\n");
 		return false;
 	}
-	(*ch).removeUser(*cl);
 	Client tmp;
 	tmp.setFd(-1);
 	tmp.setNickname(cli.getNickname());
@@ -141,6 +140,7 @@ bool Server::kick( Client & cli, std::deque<std::string> input ) {
 		(*ch).broadcastMsg(tmp, "Kick " + (*cl).getNickname() + " from " + (*ch).getName());
 	else
 		(*ch).broadcastMsg(tmp, "Kick " + (*cl).getNickname() + " from " + (*ch).getName() + " using \"" + input.front() + "\" as the reason.");
+	(*ch).removeUser(*cl);
 	return true;
 }
 
@@ -225,11 +225,11 @@ bool Server::part( Client & cli, std::deque<std::string> input ) {
 		else if (std::find((*ch).getUsers().begin(), (*ch).getUsers().end(), cli) == (*ch).getUsers().end())
 			ERR_NOTONCHANNEL(cli.getFd(), cli.getNickname(), (*ch).getName());
 		else {
-			(*ch).removeUser(cli);
 			Client tmp;
 			tmp.setFd(-1);
 			tmp.setNickname(cli.getNickname());
 			(*ch).broadcastMsg(tmp, "user " + cli.getNickname() + " leaved the channel");
+			(*ch).removeUser(cli);
 			ft_sendMsg(cli.getFd(), ":server " + cli.getNickname() + " :leave channel '" + (*ch).getName() + "'");
 		}
 	} while (input.size() > 1);

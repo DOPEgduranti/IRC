@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:54:21 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/01 12:26:58 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/03 11:50:25 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void Client::setUser( std::string username, std::string hostname, std::string se
 bool Client::joinChannel( Channel & chan, std::string key ) {
 	std::vector<Channel>::iterator it = std::find(_channels.begin(), _channels.end(), chan);
 	if (it != _channels.end()) {
-		ft_sendMsg(_fd, chan.getName() + ": you already joined this channel");
+		ft_sendMsg(_fd, ":server " + chan.getName() + " :you already joined this channel");
 		return true;
 	}
 	if (chan.getUserLimit() && chan.getMaxUsers() == chan.getUsersNbr()) {
