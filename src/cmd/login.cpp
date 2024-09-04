@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:20:31 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/02 15:45:52 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:20:16 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ bool Server::pass( Client & cli, std::deque<std::string> input ) {
 	input.pop_front();
 	if (input.size() != 0 && input.front() == _key) {
 		cli.login();
-		ft_sendMsg(cli.getFd(), ":server user :login SUCCESS");
+		ft_sendMsg(cli.getFd(), ":server info :login SUCCESS");
 		return true;
 	}
-	ft_sendMsg(cli.getFd(), ":server user :login FAILURE");
+	ft_sendMsg(cli.getFd(), ":server info :login FAILURE");
 	return false;
 }
 
@@ -48,8 +48,17 @@ bool Server::nick( Client & cli, std::deque<std::string> input ) {
 			return false;
 		}
 	}
+	std::string oldNick = cli.getNickname();
 	cli.setNickname(input.front());
-	ft_sendMsg(cli.getFd(), ":server " + cli.getNickname() + " :nickname change SUCCESS");
+	ft_sendMsg(cli.getFd(), ":server info :nickname changed to " + cli.getNickname());
+	for (size_t i = 0; i < _channels.size(); i++) {
+		if (std::find(cli.getChannels().begin(), cli.getChannels().end(), _channels[i]) != cli.getChannels().end()) {
+			Client tmp;
+			tmp.setFd(-1);
+			tmp.setNickname(cli.getNickname());
+			_channels[i].broadcastMsg(tmp, oldNick + " nickname changed to " + cli.getNickname());
+		}
+	}
 	return true;
 }
 

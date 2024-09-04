@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:44 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/04 11:53:56 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/04 15:50:29 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 #include <utils.hpp>
 #include <Channel.hpp>
 
-# define MAX_JOINABLECHANNELS 3
+# ifndef MAX_JOINABLECHANNELS
+#  define MAX_JOINABLECHANNELS 3
+# endif
 
 class Channel;
 

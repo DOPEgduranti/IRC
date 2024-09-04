@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/02 10:36:31 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:02:02 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,19 +131,19 @@ bool Server::clientLogin( Client & cli, std::deque<std::string> input ) {
 				if (input.front() == "PASS")
 					pass(cli, input);
 				else
-					ft_sendMsg(cli.getFd(), "Server :Please insert server password using 'PASS'");
+					ft_sendMsg(cli.getFd(), ":server alert :please insert server password using 'PASS' command");
 				return false;
 			}
 			else if (input.front() == "NICK")
 				nick(cli, input);
 			else
-				ft_sendMsg(cli.getFd(), "Server :Please choose a nickname using 'NICK'");
+				ft_sendMsg(cli.getFd(), ":server alert :please choose a nickname using 'NICK' command");
 			return false;
 		}
 		else if (input.front() == "USER")
 			user(cli, input);
 		else
-			ft_sendMsg(cli.getFd(), "Server :Please complete your login using 'USER'");
+			ft_sendMsg(cli.getFd(), ":server alert :please complete your login using 'USER' command");
 		return false;
 	}
 	return true;
@@ -169,7 +169,7 @@ void Server::receiveData( int fd ) {
 		if (input.empty() || input.front().empty())
 			return ;
 		if (_cmds.find(input.front()) == _cmds.end()) {
-			ft_sendMsg(fd, "Server :Command '" + input.front() + "' not found");
+			ft_sendMsg(fd, ":server 400 " + (*cli).getNickname() + " :command '" + input.front() + "' not found");
 			return ;
 		}
 		else if (input.front() == "HELP")
@@ -200,11 +200,9 @@ void Server::removeClient( Client & cli ) {
 			break ;
 		}
 	}
-	if (std::find(_clients.begin(), _clients.end(), cli) != _clients.end()) {
-		for (size_t i = 0; i < _channels.size(); i++)
-			_channels[i].removeUser(cli);
-		_clients.erase(std::find(_clients.begin(), _clients.end(), cli));
-	}
+	for (size_t i = 0; i < _channels.size(); i++)
+		_channels[i].removeUser(cli);
+	_clients.erase(std::find(_clients.begin(), _clients.end(), cli));
 	// for(size_t i = 0; i < _clients.size(); i++) {
 	// 	if (_clients[i].getFd() == fd) {
 	// 		_clients.erase(_clients.begin() + i);

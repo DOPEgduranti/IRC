@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/04 12:11:51 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/04 15:47:37 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ void Channel::removeUser( Client & cli ) {
 	}
 	if (std::find(_operators.begin(), _operators.end(), cli) != _operators.end())
 		_operators.erase(std::find(_operators.begin(), _operators.end(), cli));
-	if (_operators.empty())
+	if (_operators.empty() && !_users.empty())
 		_operators.push_back(_users.front());
 }
 
