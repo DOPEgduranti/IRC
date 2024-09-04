@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:44 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/02 15:35:33 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/04 11:53:56 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ public:
 	std::string getHostName( void ) const { return _hostname; }
 	bool getLogged( void ) const { return _logged; }
 	int getChannelNbr( void ) const { return _channels.size(); }
-	std::vector<Channel> getChannels( void ) const { return _channels; }
+	std::vector<Channel> const & getChannels( void ) const { return _channels; }
 	
 	void setFd( int fd ) { _fd = fd; }
 	void setIpAddr( std::string ipAdd ) { _ipAddr = ipAdd; }

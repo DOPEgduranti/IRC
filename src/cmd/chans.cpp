@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/03 11:00:14 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/04 12:19:43 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ bool Server::mode( Client & cli, std::deque<std::string> input ) {
 		ERR_NOSUCHCHANNEL(cli.getFd(), cli.getNickname(), input.front());
 		return false;
 	}
-	if (std::find((*chan).getUsers().begin(), (*chan).getUsers().end(), input.front()) == (*chan).getUsers().end()) {
+	if (std::find((*chan).getUsers().begin(), (*chan).getUsers().end(), cli) == (*chan).getUsers().end()) {
 		ERR_NOTONCHANNEL(cli.getFd(), cli.getNickname(), input.front());
 		return false;
 	}
@@ -65,7 +65,6 @@ bool Server::mode( Client & cli, std::deque<std::string> input ) {
 		return false;
 	}
 	input.pop_front();
-	std::vector<Client>::iterator tmp;
 	switch (modeCases(input.front())) {
 	case eInvite:
 		(*chan).setInviteOnly(input.front());
@@ -82,12 +81,11 @@ bool Server::mode( Client & cli, std::deque<std::string> input ) {
 			ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "MODE");
 			break;
 		}
-		tmp = std::find((*chan).getUsers().begin(), (*chan).getUsers().end(), input[1]);
-		if (tmp == (*chan).getUsers().end()) {
+		if (std::find((*chan).getUsers().begin(), (*chan).getUsers().end(), input[1]) == (*chan).getUsers().end()) {
 			ERR_NOSUCHNICK(cli.getFd(), cli.getNickname(), input[1]);
 			break;
 		}
-		(*chan).manageOperator(*tmp, input.front());
+		(*chan).manageOperator(input[1], input.front());
 		break;
 	case eLimit:
 		if ((*chan).setUserLimit(input) == false)

@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/04 11:11:37 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/04 12:11:51 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,13 +95,12 @@ bool Channel::setUserLimit( std::deque<std::string> input ) {
 }
 
 void Channel::addUser( Client & cli ) {
-	std::vector<Client>::iterator it = find(_users.begin(), _users.end(), cli);
-	if (it != _users.end())
+	if (find(_users.begin(), _users.end(), cli) != _users.end())
 		return ;
 	if (std::find(_invites.begin(), _invites.end(), cli) != _invites.end())
 		_invites.erase(std::find(_invites.begin(), _invites.end(), cli));
 	_users.push_back(cli);
-	if (_users.size() == 1)
+	if (_operators.empty())
 		_operators.push_back(cli);
 	if (_topic.empty())
 		RPL_NOTOPIC(cli.getFd(), cli.getNickname(), _name);
@@ -122,11 +121,11 @@ void Channel::addUser( Client & cli ) {
 	std::cout << _name << ": Client <" << cli.getFd() << "> joined the channel" << std::endl;
 }
 
-void Channel::manageOperator( Client & cli, std::string & str ) {
-	if (str == "-o" && std::find(_operators.begin(), _operators.end(), cli) != _operators.end())
-		_operators.erase(std::find(_operators.begin(), _operators.end(), cli));
-	else if (str == "+o" && std::find(_users.begin(), _users.end(), cli) != _users.end())
-		_operators.push_back(cli);
+void Channel::manageOperator( std::string & nickname, std::string & str ) {
+	if (str == "-o" && std::find(_operators.begin(), _operators.end(), nickname) != _operators.end())
+		_operators.erase(std::find(_operators.begin(), _operators.end(), nickname));
+	else if (str == "+o" && std::find(_users.begin(), _users.end(), nickname) != _users.end())
+		_operators.push_back(*std::find(_users.begin(), _users.end(), nickname));
 }
 
 void Channel::removeUser( Client & cli ) {
