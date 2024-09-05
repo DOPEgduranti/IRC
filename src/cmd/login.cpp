@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:20:31 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/04 16:20:16 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/05 16:23:15 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ bool Server::nick( Client & cli, std::deque<std::string> input ) {
 	}
 	std::string oldNick = cli.getNickname();
 	cli.setNickname(input.front());
-	ft_sendMsg(cli.getFd(), ":server info :nickname changed to " + cli.getNickname());
+	ft_sendMsg(cli.getFd(), ":" + oldNick + "!" + cli.getUsername() + "@" + cli.getHostName() + " NICK :" + cli.getNickname());
 	for (size_t i = 0; i < _channels.size(); i++) {
 		if (std::find(cli.getChannels().begin(), cli.getChannels().end(), _channels[i]) != cli.getChannels().end()) {
 			Client tmp;
