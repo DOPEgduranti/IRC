@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/04 16:02:02 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/09 11:00:02 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void Server::setupSocket( void ) {
 		throw std::runtime_error("setting option SO_REUSEADDR on server socket: FAILURE");
 	if (fcntl(_socketFd, F_SETFL, O_NONBLOCK) == -1)
 		throw std::runtime_error("setting option O_NONBLOCK on server socket: FAILURE");
-	if (bind(_socketFd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
+	if (bind(_socketFd, reinterpret_cast<struct sockaddr *>(&addr), sizeof(addr)) == -1)
 		throw std::runtime_error("binding server socket: FAILURE");
 	if (listen(_socketFd, SOMAXCONN) == -1)
 		throw std::runtime_error("server socket cannot accept any connections");
@@ -105,7 +105,7 @@ void Server::acceptClient( void ) {
 	struct sockaddr_in clientAddr;
 	struct pollfd myPoll;
 	socklen_t len = sizeof(clientAddr);
-	int clientFd = accept(_socketFd, (sockaddr *)&clientAddr, &len);
+	int clientFd = accept(_socketFd, reinterpret_cast<sockaddr *>(&clientAddr), &len);
 	if (clientFd == -1) {
 		std::cout << "Client <" << clientFd << "> connection: FAILURE" << std::endl;
 		return ;

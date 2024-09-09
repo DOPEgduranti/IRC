@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/04 12:19:43 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/09 10:40:35 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ bool Server::mode( Client & cli, std::deque<std::string> input ) {
 			ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "MODE");
 		break;
 	default:
+		ERR_UNKNOWNMODE(cli.getFd(), cli.getNickname(), input.front());
 		break;
 	}
 	return true;
@@ -215,11 +216,12 @@ bool Server::part( Client & cli, std::deque<std::string> input ) {
 		ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "PART");
 		return false;
 	}
+	input.pop_front();
+	std::deque<std::string> qu = ft_split(input.front(), ',');
 	do {
-		input.pop_front();
-		std::vector<Channel>::iterator ch = std::find(_channels.begin(), _channels.end(), input.front());
+		std::vector<Channel>::iterator ch = std::find(_channels.begin(), _channels.end(), qu.front());
 		if (ch == _channels.end())
-			ERR_NOSUCHCHANNEL(cli.getFd(), cli.getNickname(), input.front());
+			ERR_NOSUCHCHANNEL(cli.getFd(), cli.getNickname(), qu.front());
 		else if (std::find((*ch).getUsers().begin(), (*ch).getUsers().end(), cli) == (*ch).getUsers().end())
 			ERR_NOTONCHANNEL(cli.getFd(), cli.getNickname(), (*ch).getName());
 		else {
@@ -230,6 +232,7 @@ bool Server::part( Client & cli, std::deque<std::string> input ) {
 			(*ch).removeUser(cli);
 			ft_sendMsg(cli.getFd(), ":server " + cli.getNickname() + " :leave channel '" + (*ch).getName() + "'");
 		}
-	} while (input.size() > 1);
+		qu.pop_front();
+	} while (!qu.empty());
 	return true;
 }
