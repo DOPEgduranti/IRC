@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:57:24 by gduranti          #+#    #+#             */
-/*   Updated: 2024/08/20 16:02:26 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/09 11:07:02 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,7 @@ void ERR_NOSUCHCHANNEL( int fd, std::string nickname, std::string channelName );
 	making the attempt is not a chanop on the specified channel.
 */
 void ERR_CHANOPRIVSNEEDED( int fd, std::string nickname, std::string channelName );
+
 
 
 
