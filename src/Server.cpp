@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 10:32:19 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:36:05 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,11 @@ void Server::signalHandler( int signum ) {
 
 void Server::setupSocket( void ) {
 	int value = 1;
-	struct sockaddr_in addr;
+	
 	struct pollfd mypoll;
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = INADDR_ANY;
-	addr.sin_port = htons(_port);
+	_addr.sin_family = AF_INET;
+	_addr.sin_addr.s_addr = INADDR_ANY;
+	_addr.sin_port = htons(_port);
 	_socketFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_socketFd == -1)
 		throw std::runtime_error("server socket generation failed");
@@ -70,7 +70,7 @@ void Server::setupSocket( void ) {
 		throw std::runtime_error("setting option SO_REUSEADDR on server socket: FAILURE");
 	if (fcntl(_socketFd, F_SETFL, O_NONBLOCK) == -1)
 		throw std::runtime_error("setting option O_NONBLOCK on server socket: FAILURE");
-	if (bind(_socketFd, reinterpret_cast<struct sockaddr *>(&addr), sizeof(addr)) == -1)
+	if (bind(_socketFd, reinterpret_cast<struct sockaddr *>(&_addr), sizeof(_addr)) == -1)
 		throw std::runtime_error("binding server socket: FAILURE");
 	if (listen(_socketFd, SOMAXCONN) == -1)
 		throw std::runtime_error("server socket cannot accept any connections");
@@ -131,19 +131,19 @@ bool Server::clientLogin( Client & cli, std::deque<std::string> input ) {
 				if (input.front() == "PASS")
 					pass(cli, input);
 				else
-					ft_sendMsg(cli.getFd(), ":server alert :please insert server password using 'PASS' command");
+					ft_sendMsg(cli.getFd(), ":server info :please insert server password using 'PASS' command");
 				return false;
 			}
 			else if (input.front() == "NICK")
 				nick(cli, input);
 			else
-				ft_sendMsg(cli.getFd(), ":server alert :please choose a nickname using 'NICK' command");
+				ft_sendMsg(cli.getFd(), ":server info :please choose a nickname using 'NICK' command");
 			return false;
 		}
 		else if (input.front() == "USER")
 			user(cli, input);
 		else
-			ft_sendMsg(cli.getFd(), ":server alert :please complete your login using 'USER' command");
+			ft_sendMsg(cli.getFd(), ":server info :please complete your login using 'USER' command");
 		return false;
 	}
 	return true;
@@ -163,21 +163,32 @@ void Server::receiveData( int fd ) {
 	else {
 		buffer[bytes] = 0;
 		std::string str = buffer;
-		std::deque<std::string> input = ft_split(str, ' ');
-		for (size_t i = 0; i < input.size(); i++)
-			std::cout << "input[" << i << "]: '" << input[i] << "'" << std::endl;
-		if (input.empty() || input.front().empty())
-			return ;
-		if (_cmds.find(input.front()) == _cmds.end()) {
-			ft_sendMsg(fd, ":server 400 " + (*cli).getNickname() + " :command '" + input.front() + "' not found");
-			return ;
+		std::deque<std::string> dq = ft_split(str);
+		for (size_t i = 0; i < dq.size(); i++)
+			std::cout << "dq[" << i << "]: '" << dq[i] << "'" << std::endl;
+		while (!dq.empty()) {
+			std::deque<std::string> input = ft_split(dq.front(), ' ');
+			for (size_t i = 0; i < input.size(); i++)
+				std::cout << "input[" << i << "]: '" << input[i] << "'" << std::endl;
+			if (input.empty() || input.front().empty()) {
+				dq.pop_front();
+				continue ;
+			}
+			if (_cmds.find(input.front()) == _cmds.end()) {
+				ft_sendMsg(fd, ":server 400 " + (*cli).getNickname() + " :command '" + input.front() + "' not found");
+				dq.pop_front();
+				continue ;
+			}
+			else if (input.front() == "HELP")
+				help(*cli, input);
+			else if (clientLogin(*cli, input) == false) {
+				dq.pop_front();
+				continue ;
+			}
+			else
+				(this->*(_cmds[input.front()]))(*cli, input);
+			dq.pop_front();
 		}
-		else if (input.front() == "HELP")
-			help(*cli, input);
-		else if (clientLogin(*cli, input) == false)
-			return ;
-		else
-			(this->*(_cmds[input.front()]))(*cli, input);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:42 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 10:32:04 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:35:44 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ private:
 	std::string _name;
 	int _port;
 	std::string _key;
+	struct sockaddr_in _addr;
 	int _socketFd;
 	static bool _signal;
 	std::vector<Client> _clients;

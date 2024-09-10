@@ -6,11 +6,12 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 11:36:09 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 11:20:01 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 11:41:41 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Server.hpp>
+#include <msg.hpp>
 
 bool Server::privmsg( Client & cli, std::deque<std::string> input ) {
 	if (input.size() < 3) {
@@ -40,7 +41,7 @@ bool Server::names( Client & cli, std::deque<std::string> input ) {
 			RPL_NAMREPLY(cli.getFd(), cli.getNickname(), _channels[i]);
 			RPL_ENDOFNAMES(cli.getFd(), cli.getNickname(), _channels[i].getName());
 		}
-		std::string message = ":server 353 " + cli.getNickname() + " " + cli.getNickname() + " :";
+		std::string message = ":server 353 " + cli.getNickname() + " = " + cli.getNickname() + " :";
 		for (size_t i = 0; i < _clients.size(); i++) {
 			if (_clients[i].getChannels().empty())
 				message += _clients[i].getNickname();

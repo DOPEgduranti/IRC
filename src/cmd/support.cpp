@@ -6,11 +6,12 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:24:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/03 11:54:17 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 11:34:52 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Server.hpp>
+#include <msg.hpp>
 
 bool Server::help( Client & cli, std::deque<std::string> input ) {
 	(void) input;

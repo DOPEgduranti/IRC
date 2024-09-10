@@ -6,11 +6,12 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:54:21 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/09 11:43:48 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 11:34:02 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Client.hpp>
+#include <msg.hpp>
 
 Client::Client( void ) : _nickname(""), _username("") , _logged(false) {
 	

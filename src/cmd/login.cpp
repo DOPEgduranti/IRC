@@ -6,11 +6,12 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:20:31 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/05 16:23:15 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 11:34:29 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Server.hpp>
+#include <msg.hpp>
 
 bool Server::pass( Client & cli, std::deque<std::string> input ) {
 	if (input.size() < 2) {

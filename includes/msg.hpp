@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:57:24 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 11:21:47 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:13:05 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <iostream>
 # include <sys/socket.h>
-#include <Channel.hpp>
+# include <Channel.hpp>
 
 # define ERR_NOTREGISTERED " :You have not registered" //Returned by the server to indicate that the client must be registered before the server will allow it to be parsed in detail.
 # define ERR_NOPRIVILEGES " :Permission Denied- You’re not an IRC operator" //Any command requiring operator privileges to operate must return this error to indicate the attempt was unsuccessful.
@@ -243,5 +243,11 @@ void RPL_NAMREPLY( int fd, std::string nickname, Channel const & chan );
     the end.
 */
 void RPL_ENDOFNAMES( int fd, std::string nickname, std::string chan );
+
+/*
+	324 RPL_CHANNELMODEIS
+    "<channel> <mode> <mode params>"
+*/
+void RPL_CHANNELMODEIS( int fd, std::string nickname, Channel const & chan );
 
 #endif

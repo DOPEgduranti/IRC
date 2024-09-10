@@ -6,11 +6,12 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/09 10:40:35 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:37:20 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Server.hpp>
+#include <msg.hpp>
 
 bool Server::join( Client & cli, std::deque<std::string> input ) {
 	if (input.size() < 2) {
@@ -36,6 +37,7 @@ bool Server::join( Client & cli, std::deque<std::string> input ) {
 					cli.joinChannel(*it, key.front());
 			else {
 				_channels.push_back(Channel(chans.front(), key.front()));
+				ft_sendMsg(cli.getFd(), ":" + cli.getNickname() + "!server@" + inet_ntoa(_addr.sin_addr) + " JOIN :" + chans.front());
 				cli.joinChannel(_channels.back(), key.front());
 			}
 		}
@@ -46,7 +48,7 @@ bool Server::join( Client & cli, std::deque<std::string> input ) {
 }
 
 bool Server::mode( Client & cli, std::deque<std::string> input ) {
-	if (input.size() < 3) {
+	if (input.size() < 2) {
 		ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "MODE");
 		return false;
 	}
@@ -65,6 +67,10 @@ bool Server::mode( Client & cli, std::deque<std::string> input ) {
 		return false;
 	}
 	input.pop_front();
+	if (input.empty()) {
+		RPL_CHANNELMODEIS(cli.getFd(), cli.getNickname(), *chan);
+		return true;
+	}
 	switch (modeCases(input.front())) {
 	case eInvite:
 		(*chan).setInviteOnly(input.front());

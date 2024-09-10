@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:51:47 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/05 15:43:56 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:29:08 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,23 @@ std::string ft_erase( std::string & str, std::string set ) {
 		}
 	}
 	return str;
+}
+
+std::deque<std::string> ft_split( std::string & str) {
+	std::deque<std::string> deq;
+	std::string tmp;
+	for (size_t i = 0; i < str.size(); i++) {
+		if (str[i] == '\r' && str[i + 1] == '\n' && !tmp.empty()) {
+			deq.push_back(tmp);
+			tmp.clear();
+			i++;
+		}
+		else
+			tmp += str[i];
+	}
+	if (!tmp.empty())
+		deq.push_back(tmp);
+	return deq;
 }
 
 std::deque<std::string> ft_split( std::string & str, char c ) {
@@ -129,3 +146,4 @@ int validPositiveInteger( std::string & str ) {
 		return -1;
 	return static_cast<int>(tmp);
 }
+
