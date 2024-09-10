@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 12:54:20 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:07:37 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,10 @@ void Channel::manageOperator( std::string & nickname, std::string & str ) {
 		_operators.erase(std::find(_operators.begin(), _operators.end(), nickname));
 	else if (str == "+o" && std::find(_users.begin(), _users.end(), nickname) != _users.end())
 		_operators.push_back(*std::find(_users.begin(), _users.end(), nickname));
+	for (size_t i = 0; i < _users.size(); i++) {
+		RPL_NAMREPLY(_users[i].getFd(), _users[i].getNickname(), *this);
+		RPL_ENDOFNAMES(_users[i].getFd(), _users[i].getNickname(), _name);
+	}
 }
 
 void Channel::removeUser( Client & cli ) {

@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 12:37:20 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:18:17 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,13 +138,12 @@ bool Server::kick( Client & cli, std::deque<std::string> input ) {
 		ft_sendMsg(cli.getFd(), ":" + (*ch).getName() + " " + cli.getNickname() + " :user " + (*cl).getNickname() + " not in channel\r\n");
 		return false;
 	}
-	Client tmp;
-	tmp.setFd(-1);
-	tmp.setNickname(cli.getNickname());
-	if (input.empty())
-		(*ch).broadcastMsg(tmp, "Kick " + (*cl).getNickname() + " from " + (*ch).getName());
-	else
-		(*ch).broadcastMsg(tmp, "Kick " + (*cl).getNickname() + " from " + (*ch).getName() + " using \"" + input.front() + "\" as the reason.");
+	std::string kickMsg = "stfu";
+	if (!input.empty())
+		kickMsg = input.front();
+	// ft_sendMsg(cli.getFd(), ":" + cli.getNickname() + " KICK " + (*ch).getName() + " " + (*cl).getNickname() + " :" + kickMsg);
+	for (size_t i = 0; i < (*ch).getUsers().size(); i++)
+		ft_sendMsg((*ch).getUsers()[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " KICK " + (*ch).getName() + " " + (*cl).getNickname() + " :" + kickMsg);
 	(*ch).removeUser(*cl);
 	return true;
 }
@@ -231,12 +230,9 @@ bool Server::part( Client & cli, std::deque<std::string> input ) {
 		else if (std::find((*ch).getUsers().begin(), (*ch).getUsers().end(), cli) == (*ch).getUsers().end())
 			ERR_NOTONCHANNEL(cli.getFd(), cli.getNickname(), (*ch).getName());
 		else {
-			Client tmp;
-			tmp.setFd(-1);
-			tmp.setNickname(cli.getNickname());
-			(*ch).broadcastMsg(tmp, "user " + cli.getNickname() + " leaved the channel");
+			for (size_t i = 0; i < (*ch).getUsers().size(); i++)
+				ft_sendMsg((*ch).getUsers()[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " PART " + (*ch).getName() + " :goodbye!");
 			(*ch).removeUser(cli);
-			ft_sendMsg(cli.getFd(), ":server " + cli.getNickname() + " :leave channel '" + (*ch).getName() + "'");
 		}
 		qu.pop_front();
 	} while (!qu.empty());
