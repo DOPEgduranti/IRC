@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 15:37:25 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:29:52 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,25 +125,20 @@ void Server::acceptClient( void ) {
 }
 
 bool Server::clientLogin( Client & cli, std::deque<std::string> input ) {
-	if (cli.getUsername().empty()) {
-		if (cli.getNickname().empty()) {
-			if (cli.getLogged() == false) {
-				if (input.front() == "PASS")
-					pass(cli, input);
-				else
-					ft_sendMsg(cli.getFd(), ":server info :please insert server password using 'PASS' command");
-				return false;
-			}
-			else if (input.front() == "NICK")
-				nick(cli, input);
+	if (cli.getNickname().empty() || cli.getUsername().empty()) {
+		if (cli.getLogged() == false) {
+			if (input.front() == "PASS")
+				pass(cli, input);
 			else
-				ft_sendMsg(cli.getFd(), ":server info :please choose a nickname using 'NICK' command");
+				ft_sendMsg(cli.getFd(), ":server info :please insert server password using 'PASS' command");
 			return false;
 		}
+		else if (input.front() == "NICK")
+			nick(cli, input);
 		else if (input.front() == "USER")
 			user(cli, input);
 		else
-			ft_sendMsg(cli.getFd(), ":server info :please complete your login using 'USER' command");
+			ft_sendMsg(cli.getFd(), ":server info :please complete your registration using 'NICK' and 'USER' commands");
 		return false;
 	}
 	return true;
