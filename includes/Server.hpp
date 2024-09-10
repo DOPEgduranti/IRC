@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:42 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/02 10:36:04 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 10:32:04 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ public:
 	bool quit( Client & cli, std::deque<std::string> input );
 
 	bool privmsg( Client & cli, std::deque<std::string> input );
+	bool names( Client & cli, std::deque<std::string> input );
 	
 	bool join( Client & cli, std::deque<std::string> input );
 	bool mode( Client & cli, std::deque<std::string> input );

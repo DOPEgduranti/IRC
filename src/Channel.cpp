@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/04 15:47:37 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 11:04:06 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,16 +106,18 @@ void Channel::addUser( Client & cli ) {
 		RPL_NOTOPIC(cli.getFd(), cli.getNickname(), _name);
 	else
 		RPL_TOPIC(cli.getFd(), cli.getNickname(), _name, _topic);
-	std::string mess = ":server 353 " + cli.getNickname() + " = " + _name + " :" ;
-	for (size_t i = 0; i < _users.size(); i++) {
-		if (std::find(_operators.begin(), _operators.end(), _users[i]) != _operators.end())
-			mess += "@";
-		mess += _users[i].getNickname();
-		if (i + 1 < _users.size())
-			mess += " ";
-	}
-	ft_sendMsg(cli.getFd(), mess);
-	ft_sendMsg(cli.getFd(), ":server 366 " + cli.getNickname() + " " + _name + " :End of /NAMES list");
+	RPL_NAMREPLY(cli.getFd(), cli.getNickname(), *this);
+	RPL_ENDOFNAMES(cli.getFd(), cli.getNickname(), _name);
+	// std::string mess = ":server 353 " + cli.getNickname() + " = " + _name + " :" ;
+	// for (size_t i = 0; i < _users.size(); i++) {
+	// 	if (std::find(_operators.begin(), _operators.end(), _users[i]) != _operators.end())
+	// 		mess += "@";
+	// 	mess += _users[i].getNickname();
+	// 	if (i + 1 < _users.size())
+	// 		mess += " ";
+	// }
+	// ft_sendMsg(cli.getFd(), mess);
+	// ft_sendMsg(cli.getFd(), ":server 366 " + cli.getNickname() + " " + _name + " :End of /NAMES list");
 	for (size_t i = 0; i < _users.size(); i++)
 		ft_sendMsg(_users[i].getFd(), ":" + cli.getNickname() + " JOIN :" + _name);
 	std::cout << _name << ": Client <" << cli.getFd() << "> joined the channel" << std::endl;

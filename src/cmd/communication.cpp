@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 11:36:09 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/02 15:53:05 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 11:20:01 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,37 @@ bool Server::privmsg( Client & cli, std::deque<std::string> input ) {
 		else
 			ERR_NOSUCHNICK(cli.getFd(), cli.getNickname(), input.front());
 		input.pop_front();
+	}
+	return true;
+}
+
+bool Server::names( Client & cli, std::deque<std::string> input ) {
+	if (input.size() == 1) {
+		for (size_t i = 0; i < _channels.size(); i++) {
+			RPL_NAMREPLY(cli.getFd(), cli.getNickname(), _channels[i]);
+			RPL_ENDOFNAMES(cli.getFd(), cli.getNickname(), _channels[i].getName());
+		}
+		std::string message = ":server 353 " + cli.getNickname() + " " + cli.getNickname() + " :";
+		for (size_t i = 0; i < _clients.size(); i++) {
+			if (_clients[i].getChannels().empty())
+				message += _clients[i].getNickname();
+			if (i + 1 < _clients.size())
+				message += " ";
+		}
+		ft_sendMsg(cli.getFd(), message);
+		RPL_ENDOFNAMES(cli.getFd(), cli.getNickname(), cli.getNickname());
+	}
+	else {
+		input.pop_front();
+		std::deque<std::string> chans = ft_split(input.front(), ',');
+		while (!chans.empty()) {
+			std::vector<Channel>::iterator it = std::find(_channels.begin(), _channels.end(), chans.front());
+			if (it != _channels.end()) {
+				RPL_NAMREPLY(cli.getFd(), cli.getNickname(), *it);
+				RPL_ENDOFNAMES(cli.getFd(), cli.getNickname(), (*it).getName());
+			}
+			chans.pop_front();
+		}
 	}
 	return true;
 }

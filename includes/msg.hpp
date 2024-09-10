@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:57:24 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/09 11:07:02 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/10 11:21:47 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <iostream>
 # include <sys/socket.h>
+#include <Channel.hpp>
 
 # define ERR_NOTREGISTERED " :You have not registered" //Returned by the server to indicate that the client must be registered before the server will allow it to be parsed in detail.
 # define ERR_NOPRIVILEGES " :Permission Denied- You’re not an IRC operator" //Any command requiring operator privileges to operate must return this error to indicate the attempt was unsuccessful.
@@ -220,5 +221,27 @@ void RPL_TOPIC( int fd, std::string nickname, std::string channel, std::string t
 	being passed onto the end client.
 */
 void RPL_INVITING( int fd, std::string userNick, std::string channel, std::string nickname );
+
+/*
+	353 RPL_NAMREPLY
+    "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"
+	- Return a list of users and operators in a channel
+*/
+void RPL_NAMREPLY( int fd, std::string nickname, Channel const & chan );
+
+/*
+	366 RPL_ENDOFNAMES
+    "<channel> :End of /NAMES list"
+    - To reply to a NAMES message, a reply pair consisting
+    of RPL_NAMREPLY and RPL_ENDOFNAMES is sent by the
+    server back to the client.  If there is no channel
+    found as in the query, then only RPL_ENDOFNAMES is
+    returned.  The exception to this is when a NAMES
+    message is sent with no parameters and all visible
+    channels and contents are sent back in a series of
+    RPL_NAMEREPLY messages with a RPL_ENDOFNAMES to mark
+    the end.
+*/
+void RPL_ENDOFNAMES( int fd, std::string nickname, std::string chan );
 
 #endif
