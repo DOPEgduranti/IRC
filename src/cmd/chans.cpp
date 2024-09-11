@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 16:18:17 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 12:04:22 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ bool Server::join( Client & cli, std::deque<std::string> input ) {
 					cli.joinChannel(*it, key.front());
 			else {
 				_channels.push_back(Channel(chans.front(), key.front()));
-				ft_sendMsg(cli.getFd(), ":" + cli.getNickname() + "!server@" + inet_ntoa(_addr.sin_addr) + " JOIN :" + chans.front());
+				// ft_sendMsg(cli.getFd(), ":" + cli.getNickname() + "!server@" + inet_ntoa(_addr.sin_addr) + " JOIN :" + chans.front());
 				cli.joinChannel(_channels.back(), key.front());
 			}
 		}
@@ -62,24 +62,24 @@ bool Server::mode( Client & cli, std::deque<std::string> input ) {
 		ERR_NOTONCHANNEL(cli.getFd(), cli.getNickname(), input.front());
 		return false;
 	}
+	if (input.size() == 1) {
+		RPL_CHANNELMODEIS(cli.getFd(), cli.getNickname(), *chan);
+		return true;
+	}
 	if (std::find((*chan).getOperators().begin(), (*chan).getOperators().end(), cli) == (*chan).getOperators().end()) {
 		ERR_CHANOPRIVSNEEDED(cli.getFd(), cli.getNickname(), input.front());
 		return false;
 	}
 	input.pop_front();
-	if (input.empty()) {
-		RPL_CHANNELMODEIS(cli.getFd(), cli.getNickname(), *chan);
-		return true;
-	}
 	switch (modeCases(input.front())) {
 	case eInvite:
-		(*chan).setInviteOnly(input.front());
+		(*chan).setInviteOnly(input.front(), cli);
 		break;
 	case eTopic:
-		(*chan).setTopicRestricted(input.front());
+		(*chan).setTopicRestricted(input.front(), cli);
 		break;
 	case eKey:
-		if ((*chan).setKeyEnable(input) == false)
+		if ((*chan).setKeyEnable(input, cli) == false)
 			ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "MODE");
 		break;
 	case eOperator:
@@ -91,10 +91,10 @@ bool Server::mode( Client & cli, std::deque<std::string> input ) {
 			ERR_NOSUCHNICK(cli.getFd(), cli.getNickname(), input[1]);
 			break;
 		}
-		(*chan).manageOperator(input[1], input.front());
+		(*chan).manageOperator(input[1], input.front(), cli);
 		break;
 	case eLimit:
-		if ((*chan).setUserLimit(input) == false)
+		if ((*chan).setUserLimit(input, cli) == false)
 			ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "MODE");
 		break;
 	default:
@@ -141,7 +141,6 @@ bool Server::kick( Client & cli, std::deque<std::string> input ) {
 	std::string kickMsg = "stfu";
 	if (!input.empty())
 		kickMsg = input.front();
-	// ft_sendMsg(cli.getFd(), ":" + cli.getNickname() + " KICK " + (*ch).getName() + " " + (*cl).getNickname() + " :" + kickMsg);
 	for (size_t i = 0; i < (*ch).getUsers().size(); i++)
 		ft_sendMsg((*ch).getUsers()[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " KICK " + (*ch).getName() + " " + (*cl).getNickname() + " :" + kickMsg);
 	(*ch).removeUser(*cl);
@@ -208,10 +207,8 @@ bool Server::topic( Client & cli, std::deque<std::string> input ) {
 			return false;
 		}
 		(*ch).setTopic(input.front());
-		Client tmp;
-		tmp.setFd(-1);
-		tmp.setNickname(cli.getNickname());
-		(*ch).broadcastMsg(tmp, "set the topic on " + (*ch).getName() + " to \"" + input.front() + "\".");
+		for (size_t i = 0; i < (*ch).getUsers().size(); i++)
+			ft_sendMsg((*ch).getUsers()[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " TOPIC " + (*ch).getName() + " :" + input.front());
 	}
 	return true;
 }

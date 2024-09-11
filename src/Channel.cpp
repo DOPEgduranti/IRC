@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 16:07:37 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 12:09:54 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,21 +51,27 @@ bool Channel::operator==( std::string const & str ) const {
 	return false;
 }
 
-void Channel::setInviteOnly( std::string & str ) {
+void Channel::setInviteOnly( std::string & str, Client const & cli ) {
 	if (str == "-i")
 		_inviteOnly = false;
 	else if (str == "+i")
 		_inviteOnly = true;
+	for (size_t i = 0; i < _users.size(); i++)
+			ft_sendMsg(_users[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " MODE " + _name + " " + str);
 }
 
-void Channel::setTopicRestricted( std::string & str ) {
+void Channel::setTopicRestricted( std::string & str, Client const & cli ) {
 	if (str == "-t")
 		_topicRestricted = false;
 	else if (str == "+t")
 		_topicRestricted = true;
+	for (size_t i = 0; i < _users.size(); i++)
+			ft_sendMsg(_users[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " MODE " + _name + " " + str);
 }
 
-bool Channel::setKeyEnable( std::deque<std::string> input ) {
+bool Channel::setKeyEnable( std::deque<std::string> input, Client const & cli ) {
+	std::string flag = input.front();
+	std::string message = ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " MODE " + _name + " " + flag;
 	if (input.front() == "-k") {
 		_key.clear();
 		_keyEnable = false;
@@ -76,11 +82,16 @@ bool Channel::setKeyEnable( std::deque<std::string> input ) {
 			return false;
 		_key = input.front();
 		_keyEnable = true;
+		message += " " + input.front();
 	}
+	for (size_t i = 0; i < _users.size(); i++)
+		ft_sendMsg(_users[i].getFd(), message);
 	return true;
 }
 
-bool Channel::setUserLimit( std::deque<std::string> input ) {
+bool Channel::setUserLimit( std::deque<std::string> input, Client const & cli ) {
+	std::string flag = input.front();
+	std::string message = ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " MODE " + _name + " " + flag;
 	if (input.front() == "-l") {
 		_maxUsers = 0;
 		_userLimit = false;
@@ -89,9 +100,12 @@ bool Channel::setUserLimit( std::deque<std::string> input ) {
 		input.pop_front();
 		if (input.empty() || validPositiveInteger(input.front()) < 1)
 			return false;
-		_userLimit = validPositiveInteger(input.front());
+		_maxUsers = validPositiveInteger(input.front());
 		_userLimit = true;
+		message += " " + input.front();
 	}
+	for (size_t i = 0; i < _users.size(); i++)
+		ft_sendMsg(_users[i].getFd(), message);
 	return true;
 }
 
@@ -111,17 +125,21 @@ void Channel::addUser( Client & cli ) {
 		RPL_TOPIC(cli.getFd(), cli.getNickname(), _name, _topic);
 	RPL_NAMREPLY(cli.getFd(), cli.getNickname(), *this);
 	RPL_ENDOFNAMES(cli.getFd(), cli.getNickname(), _name);
+	RPL_CHANNELMODEIS(cli.getFd(), cli.getNickname(), *this);
 	std::cout << _name << ": Client <" << cli.getFd() << "> joined the channel" << std::endl;
 }
 
-void Channel::manageOperator( std::string & nickname, std::string & str ) {
+void Channel::manageOperator( std::string & nickname, std::string & str, Client const & cli ) {
 	if (str == "-o" && std::find(_operators.begin(), _operators.end(), nickname) != _operators.end())
 		_operators.erase(std::find(_operators.begin(), _operators.end(), nickname));
 	else if (str == "+o" && std::find(_users.begin(), _users.end(), nickname) != _users.end())
 		_operators.push_back(*std::find(_users.begin(), _users.end(), nickname));
-	for (size_t i = 0; i < _users.size(); i++) {
-		RPL_NAMREPLY(_users[i].getFd(), _users[i].getNickname(), *this);
-		RPL_ENDOFNAMES(_users[i].getFd(), _users[i].getNickname(), _name);
+	for (size_t i = 0; i < _users.size(); i++)
+		ft_sendMsg(_users[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " MODE " + _name + " " + str + " " + nickname);
+	if (_operators.empty()) {
+		_operators.push_back(_users.front());
+		for (size_t i = 0; i < _users.size(); i++)
+			ft_sendMsg(_users[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " MODE " + _name + " +o " + nickname);
 	}
 }
 
@@ -132,8 +150,11 @@ void Channel::removeUser( Client & cli ) {
 	}
 	if (std::find(_operators.begin(), _operators.end(), cli) != _operators.end())
 		_operators.erase(std::find(_operators.begin(), _operators.end(), cli));
-	if (_operators.empty() && !_users.empty())
+	if (_operators.empty() && !_users.empty()) {
 		_operators.push_back(_users.front());
+		for (size_t i = 0; i < _users.size(); i++)
+			ft_sendMsg(_users[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " MODE " + _name + " +o " + _users.front().getNickname());
+	}
 }
 
 bool Channel::userInvited( Client const & cli ) {

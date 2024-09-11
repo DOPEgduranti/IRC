@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:10:26 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 11:25:30 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 11:30:49 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,13 @@ public:
 	std::vector<Client> const & getOperators( void ) const { return _operators; }
 	
 	void setTopic( std::string & str ) { _topic = str; }
-	void setInviteOnly( std::string & str );
-	void setTopicRestricted( std::string & str );
-	bool setKeyEnable( std::deque<std::string> input );
-	bool setUserLimit( std::deque<std::string> input );
+	void setInviteOnly( std::string & str, Client const & cli );
+	void setTopicRestricted( std::string & str, Client const & cli );
+	bool setKeyEnable( std::deque<std::string> input, Client const & cli );
+	bool setUserLimit( std::deque<std::string> input, Client const & cli );
 
 	void addUser( Client & cli );
-	void manageOperator( std::string & nickname, std::string & str );
+	void manageOperator( std::string & nickname, std::string & str, Client const & cli );
 	void removeUser( Client & cli );
 	bool userInvited( Client const & cli );
 	void inviteUser( Client & cli );

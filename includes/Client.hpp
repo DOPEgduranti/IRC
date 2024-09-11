@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:44 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/04 15:50:29 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 10:38:01 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ private:
 	std::string _servername;
 	std::string _realname;
 	bool _logged;
+	bool _loginMsg;
 	std::vector<Channel> _channels;
 public:
 	Client( void );
@@ -50,11 +51,13 @@ public:
 	std::string getRealName( void ) const { return _realname; }
 	std::string getHostName( void ) const { return _hostname; }
 	bool getLogged( void ) const { return _logged; }
+	bool getLoginMsg( void ) const { return _loginMsg; }
 	int getChannelNbr( void ) const { return _channels.size(); }
 	std::vector<Channel> const & getChannels( void ) const { return _channels; }
 	
 	void setFd( int fd ) { _fd = fd; }
 	void setIpAddr( std::string ipAdd ) { _ipAddr = ipAdd; }
+	void setLoginMsg( void ) { _loginMsg = true; }
 	void setNickname( std::string nickname ) { _nickname = nickname; }
 	void setUser( std::string username, std::string hostname, std::string servername, std::string realname );
 	void quitChannel( Channel & chan ) { _channels.erase(std::find(_channels.begin(), _channels.end(), chan)); }

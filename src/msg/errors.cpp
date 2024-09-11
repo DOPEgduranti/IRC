@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:59:38 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/09 11:06:53 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 12:18:10 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void ERR_CHANNELISFULL( int fd, std::string nickname, std::string channelName ) 
 }
 
 void ERR_INVITEONLYCHAN( int fd, std::string nickname, std::string channelName ) {
-	std::string message = ":server 471 " + nickname + " " + channelName + " :Cannot join channel (+i)\r\n" ;
+	std::string message = ":server 473 " + nickname + " " + channelName + " :Cannot join channel (+i)\r\n" ;
 	send(fd, message.c_str(), message.size(), 0);
 }
 

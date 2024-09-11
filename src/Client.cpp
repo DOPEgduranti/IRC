@@ -6,14 +6,14 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:54:21 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 11:34:02 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 12:14:36 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Client.hpp>
 #include <msg.hpp>
 
-Client::Client( void ) : _nickname(""), _username("") , _logged(false) {
+Client::Client( void ) : _nickname(""), _username("") , _logged(false), _loginMsg(false) {
 	
 }
 
@@ -26,6 +26,7 @@ Client & Client::operator=( Client const & rhs ) {
 	_servername = rhs._servername;
 	_realname = rhs._realname;
 	_logged = rhs._logged;
+	_loginMsg = rhs._loginMsg;
 	_channels = rhs._channels;
 	return *this;
 }
@@ -63,7 +64,7 @@ bool Client::joinChannel( Channel & chan, std::string key ) {
 		ft_sendMsg(_fd, ":server " + chan.getName() + " :you already joined this channel");
 		return true;
 	}
-	if (chan.getUserLimit() && chan.getMaxUsers() >= chan.getUsersNbr()) {
+	if (chan.getUserLimit() && chan.getMaxUsers() <= chan.getUsersNbr()) {
 		ERR_CHANNELISFULL(_fd, _nickname, chan.getName());
 		return false;
 	}

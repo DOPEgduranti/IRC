@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:51:58 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 12:29:12 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 10:47:05 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ enum e_mode_cases {
 bool portKeyCheck( std::string port, std::string key );
 int ft_sendMsg( int fd, std::string msg );
 std::string getFirstString( std::string & str );
-std::deque<std::string> ft_split( std::string & str);
+std::deque<std::string> ft_split( std::string & str );
 std::deque<std::string> ft_split( std::string & str, char c );
 std::string ft_erase( std::string & str, char c );
 std::string ft_erase( std::string & str, std::string set );

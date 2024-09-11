@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 13:10:36 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 12:31:23 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 11:42:55 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void RPL_ENDOFNAMES( int fd, std::string nickname, std::string chan ) {
 }
 
 void RPL_CHANNELMODEIS( int fd, std::string nickname, Channel const & chan ) {
-	std::string message = ":server 366 " + nickname + " " + chan.getName() + " +";
+	std::string message = ":server 324 " + nickname + " " + chan.getName() + " +";
 	if (chan.getKeyEnable())
 		message += "k";
 	if (chan.getUserLimit())
@@ -80,8 +80,8 @@ void RPL_CHANNELMODEIS( int fd, std::string nickname, Channel const & chan ) {
 		message += " " + chan.getKey();
 	if (chan.getUserLimit())
 		message += " " + numberToString(chan.getMaxUsers());
-	if (message == ":server 366 " + nickname + " " + chan.getName() + " +")
-		message = ":server 366 " + nickname + " " + chan.getName() + " none";
+	if (message == ":server 324 " + nickname + " " + chan.getName() + " +")
+		message = ":server 324 " + nickname + " " + chan.getName() + " none";
 	message += "\r\n";
 	send(fd, message.c_str(), message.size(), 0);
 }
