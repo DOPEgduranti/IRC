@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/11 12:04:22 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 12:47:57 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ bool Server::kick( Client & cli, std::deque<std::string> input ) {
 	}
 	input.pop_front();
 	if (cli.getNickname() == input.front()) {
-		ft_sendMsg(cli.getFd(), "you cannot kick yourself from a channel. Try PART command instead");
+		ft_sendMsg(cli.getFd(), ":" + (*ch).getName() + " PRIVMSG " + (*ch).getName() + " :you cannot kick yourself from a channel. Try PART command instead");
 		return false;
 	}
 	std::vector<Client>::iterator cl = std::find(_clients.begin(), _clients.end(), input.front());

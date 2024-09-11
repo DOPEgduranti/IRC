@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 16:29:52 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 12:57:24 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ bool Server::clientLogin( Client & cli, std::deque<std::string> input ) {
 			if (input.front() == "PASS")
 				pass(cli, input);
 			else
-				ft_sendMsg(cli.getFd(), ":server info :please insert server password using 'PASS' command");
+				ft_sendMsg(cli.getFd(), ":server 300 " + cli.getNickname() + " :please insert server password using 'PASS' command");
 			return false;
 		}
 		else if (input.front() == "NICK")
@@ -138,7 +138,7 @@ bool Server::clientLogin( Client & cli, std::deque<std::string> input ) {
 		else if (input.front() == "USER")
 			user(cli, input);
 		else
-			ft_sendMsg(cli.getFd(), ":server info :please complete your registration using 'NICK' and 'USER' commands");
+			ft_sendMsg(cli.getFd(), ":server 300 " + cli.getNickname() + " :please complete your registration using 'NICK' and 'USER' commands");
 		return false;
 	}
 	return true;
@@ -199,6 +199,8 @@ void Server::closePolls( void ) {
 }
 
 void Server::removeClient( Client & cli ) {
+	for (size_t i = 0; i < _channels.size(); i++)
+		_channels[i].removeUser(cli);
 	close(cli.getFd());
 	for(size_t i = 0; i < _polls.size(); i++) {
 		if (_polls[i].fd == cli.getFd()) {
@@ -206,8 +208,6 @@ void Server::removeClient( Client & cli ) {
 			break ;
 		}
 	}
-	for (size_t i = 0; i < _channels.size(); i++)
-		_channels[i].removeUser(cli);
 	_clients.erase(std::find(_clients.begin(), _clients.end(), cli));
 	// for(size_t i = 0; i < _clients.size(); i++) {
 	// 	if (_clients[i].getFd() == fd) {

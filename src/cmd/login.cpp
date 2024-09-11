@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:20:31 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/11 12:30:32 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 15:08:59 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ bool Server::pass( Client & cli, std::deque<std::string> input ) {
 	input.pop_front();
 	if (input.size() != 0 && input.front() == _key) {
 		cli.login();
-		ft_sendMsg(cli.getFd(), ":server info :login SUCCESS");
+		ft_sendMsg(cli.getFd(), ":server 300 " + cli.getNickname() + " :login SUCCESS");
 		return true;
 	}
-	ft_sendMsg(cli.getFd(), ":server info :login FAILURE");
+	ft_sendMsg(cli.getFd(), ":server 300 " + cli.getNickname() + " :login FAILURE");
 	return false;
 }
 

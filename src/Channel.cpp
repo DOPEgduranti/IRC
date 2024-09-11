@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/11 12:09:54 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 12:35:14 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,12 +144,12 @@ void Channel::manageOperator( std::string & nickname, std::string & str, Client 
 }
 
 void Channel::removeUser( Client & cli ) {
-	if (std::find(_users.begin(), _users.end(), cli) != _users.end()) {
-		cli.quitChannel(*this);
-		_users.erase(std::find(_users.begin(), _users.end(), cli));
-	}
+	if (std::find(_users.begin(), _users.end(), cli) == _users.end())
+		return ;
+	_users.erase(std::find(_users.begin(), _users.end(), cli));
 	if (std::find(_operators.begin(), _operators.end(), cli) != _operators.end())
 		_operators.erase(std::find(_operators.begin(), _operators.end(), cli));
+	cli.quitChannel(*this);
 	if (_operators.empty() && !_users.empty()) {
 		_operators.push_back(_users.front());
 		for (size_t i = 0; i < _users.size(); i++)
