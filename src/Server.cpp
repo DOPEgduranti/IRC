@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/11 12:57:24 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 15:57:33 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ Server::Server( std::string port, std::string key ) : _port(static_cast<int>(std
 	_cmds.insert(functions("USERHOST", &Server::userhost));
 	_cmds.insert(functions("PART", &Server::part));
 	_cmds.insert(functions("NAMES", &Server::names));
+	_cmds.insert(functions("LIST", &Server::list));
 }
 
 Server & Server::operator=( Server const & rhs ) {

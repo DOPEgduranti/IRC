@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:57:24 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 15:24:03 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 16:12:08 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,6 +217,27 @@ void RPL_TOPIC( int fd, std::string nickname, std::string channel, std::string t
 void RPL_INVITING( int fd, std::string userNick, std::string channel, std::string nickname );
 
 /*
+	352 RPL_WHOREPLY
+    "<channel> <user> <host> <server> <nick> \
+    <H|G>[*][@|+] :<hopcount> <real name>"
+*/
+void RPL_WHOREPLY( int fd, std::string userNick, Channel const & chan );
+void RPL_WHOREPLY( int fd, std::string userNick, std::string channel, Client const & cli );
+
+/*
+    315 RPL_ENDOFWHO
+    "<name> :End of /WHO list"
+    - The RPL_WHOREPLY and RPL_ENDOFWHO pair are used
+    to answer a WHO message.  The RPL_WHOREPLY is only
+    sent if there is an appropriate match to the WHO
+    query.  If there is a list of parameters supplied
+    with a WHO message, a RPL_ENDOFWHO must be sent
+    after processing each list item with <name> being
+    the item.
+*/
+void RPL_ENDOFWHO( int fd, std::string userNick, std::string name );
+
+/*
 	353 RPL_NAMREPLY
     "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"
 	- Return a list of users and operators in a channel
@@ -243,5 +264,28 @@ void RPL_ENDOFNAMES( int fd, std::string nickname, std::string chan );
     "<channel> <mode> <mode params>"
 */
 void RPL_CHANNELMODEIS( int fd, std::string nickname, Channel const & chan );
+
+/*
+	321 RPL_LISTSTART
+    "Channel :Users  Name"
+*/
+void RPL_LISTSTART( int fd, std::string nickname);
+
+/*
+    322 RPL_LIST
+    "<channel> <# visible> :<topic>"
+*/
+void RPL_LIST( int fd, std::string nickname, std::string channel, size_t visible, std::string topic);
+
+/*
+    323 RPL_LISTEND
+    ":End of /LIST"
+    - Replies RPL_LISTSTART, RPL_LIST, RPL_LISTEND mark
+    the start, actual replies with data and end of the
+    server’s response to a LIST command.  If there are
+    no channels available to return, only the start
+    and end reply must be sent.
+*/
+void RPL_LISTEND( int fd, std::string nickname );
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:42 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 12:35:44 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 15:57:14 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ public:
 	bool pong( Client & cli, std::deque<std::string> input );
 	bool who( Client & cli, std::deque<std::string> input );
 	bool userhost( Client & cli, std::deque<std::string> input );
+	bool list( Client & cli, std::deque<std::string> input );
 };
 
 #endif

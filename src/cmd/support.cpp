@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:24:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/10 11:34:52 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/11 16:21:49 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,27 +44,59 @@ bool Server::pong( Client & cli, std::deque<std::string> input ) {
 }
 
 bool Server::who( Client & cli, std::deque<std::string> input ) {
+	if (input.size() < 2) {
+		ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "WHO");
+		return false;
+	}
 	input.pop_front();
-	if (input.front() == cli.getNickname())
-		ft_sendMsg(cli.getFd(), ":server 352 " + cli.getNickname() + " :<hopcount> " + cli.getRealName());
-	ft_sendMsg(cli.getFd(), ":server 315 " + cli.getNickname() + " :End of /WHO list");
+	std::vector<Client>::iterator cliIt = std::find(_clients.begin(), _clients.end(), input.front());
+	std::vector<Channel>::iterator chanIt = std::find(_channels.begin(), _channels.end(), input.front());
+	if (cliIt != _clients.end())
+		RPL_WHOREPLY(cli.getFd(), cli.getNickname(), "none", *cliIt);
+	else if (chanIt != _channels.end())
+		RPL_WHOREPLY(cli.getFd(), cli.getNickname(), *chanIt);
+	else
+		return false;
+	RPL_ENDOFWHO(cli.getFd(), cli.getNickname(), input.front());
 	return true ;
 }
 
 bool Server::userhost( Client & cli, std::deque<std::string> input ) {
-	if (input.size() > 6)
+	if (input.size() < 2) {
+		ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "USERHOST");
 		return false;
+	}
 	input.pop_front();
 	std::string message = ":server 302 " + cli.getNickname() + " :";
-	while (!input.empty()) {
+	int i = 0;
+	while (!input.empty() && i < 5) {
 		std::vector<Client>::iterator tmp = std::find(_clients.begin(), _clients.end(), input.front());
 		if (tmp != _clients.end()) {
-			message += (*tmp).getNickname() + "=+" + (*tmp).getHostName();
+			message += (*tmp).getNickname() + "=-" + (*tmp).getHostName();
 		}
 		input.pop_front();
+		if (!input.empty())
+			message += " ";
+		i++;
 	}
 	message += "\r\n";
 	send(cli.getFd(), message.c_str(), message.size(), 0);
 	return true ;
 }
 
+bool Server::list( Client & cli, std::deque<std::string> input ) {
+	input.pop_front();
+	RPL_LISTSTART(cli.getFd(), cli.getNickname());
+	if (input.empty())
+		for (size_t i = 0; i < _channels.size(); i++)
+			RPL_LIST(cli.getFd(), cli.getNickname(), _channels[i].getName(), _channels[i].getUsers().size(), _channels[i].getTopic());
+	else {
+		while (!input.empty()) {
+			std::vector<Channel>::iterator it = std::find(_channels.begin(), _channels.end(), input.front());
+			if (it != _channels.end())
+			RPL_LIST(cli.getFd(), cli.getNickname(), (*it).getName(), (*it).getUsers().size(), (*it).getTopic());
+		}
+	}
+	RPL_LISTEND(cli.getFd(), cli.getNickname());
+	return true ;
+}
