@@ -52,7 +52,8 @@
 		"random": "cpp"
 	},
 	"C_Cpp.default.includePath": [
-		"${workspaceFolder}/includes"
+		"${workspaceFolder}/includes",
+		"${workspaceFolder}/bot"
 	],
 	"c-cpp-flylint.debug": true,
 	"c-cpp-flylint.language": "c++",
@@ -72,7 +73,8 @@
 	"c-cpp-flylint.cppcheck.enable": false,
 	"C_Cpp.default.compilerPath": "/usr/bin/clang++",
 	"c-cpp-flylint.includePaths": [
-		"${workspaceFolder}/includes"
+		"${workspaceFolder}/includes",
+		"${workspaceFolder}/bot"
 	],
 	"C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
 }

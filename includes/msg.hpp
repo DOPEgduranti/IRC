@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:57:24 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/11 16:12:08 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/12 10:29:57 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,8 +221,7 @@ void RPL_INVITING( int fd, std::string userNick, std::string channel, std::strin
     "<channel> <user> <host> <server> <nick> \
     <H|G>[*][@|+] :<hopcount> <real name>"
 */
-void RPL_WHOREPLY( int fd, std::string userNick, Channel const & chan );
-void RPL_WHOREPLY( int fd, std::string userNick, std::string channel, Client const & cli );
+void RPL_WHOREPLY( int fd, std::string userNick, Channel const & chan ); void RPL_WHOREPLY( int fd, std::string userNick, std::string channel, Client const & cli );
 
 /*
     315 RPL_ENDOFWHO

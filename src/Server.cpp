@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/11 15:57:33 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/12 12:40:04 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,30 @@ void Server::signalHandler( int signum ) {
 
 void Server::setupSocket( void ) {
 	int value = 1;
-	
 	struct pollfd mypoll;
 	_addr.sin_family = AF_INET;
 	_addr.sin_addr.s_addr = INADDR_ANY;
 	_addr.sin_port = htons(_port);
+	char hostname[256];
+	if (gethostname(hostname, sizeof(hostname)) == -1)
+	{
+		std::cerr << "Error: gethostname failed - " << strerror(errno) << std::endl;
+		throw std::runtime_error("Hostname retrieval failed");
+	}
+	struct hostent *host = gethostbyname(hostname);
+	if (host == NULL)
+	{
+		std::cerr << "Error: gethostbyname failed - " << hstrerror(h_errno) << std::endl;
+		throw std::runtime_error("Host information retrieval failed");
+	}
+	struct in_addr **addr_list = reinterpret_cast<struct in_addr **>(host->h_addr_list);
+	if (addr_list[0] == NULL)
+	{
+		std::cerr << "Error: no IP addresses found for host" << std::endl;
+		throw std::runtime_error("No IP addresses found");
+	}
+	_addr.sin_addr = *addr_list[0];
+	std::cout << inet_ntoa(_addr.sin_addr) << std::endl;
 	_socketFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_socketFd == -1)
 		throw std::runtime_error("server socket generation failed");

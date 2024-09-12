@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.hpp                                          :+:      :+:    :+:   */
+/*   Bot.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/04 10:51:58 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/12 11:50:52 by gduranti         ###   ########.fr       */
+/*   Created: 2024/09/12 10:40:40 by gduranti          #+#    #+#             */
+/*   Updated: 2024/09/12 12:13:19 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_HPP
-# define UTILS_HPP
+#ifndef BOT_HPP
+# define BOT_HPP
 
 # include <iostream>
 # include <vector> //-> for vector
@@ -34,33 +34,31 @@
 # include <netdb.h>
 # include <errno.h>
 
-enum e_mode_cases {
-	eErr = -1,
-	eInvite,
-	eTopic,
-	eKey,
-	eOperator,
-	eLimit
+class Bot {
+private:
+	int _port;
+	struct sockaddr_in _addr;
+	int _socketFd;
+	static bool _signal;
+	std::vector<struct pollfd> _polls;
+	int _serverFd;
+	std::string _serverIpAddr;
+	int _serverPort;
+	Bot( void ) {}
+public:
+	Bot( std::string IpAdd, std::string port ) : _serverIpAddr(IpAdd), _serverPort(static_cast<int>(std::strtol(port.c_str(), NULL, 10))) {}
+	Bot ( Bot const & other ) { *this = other; }
+	~Bot( void ) {}
+	
+	Bot & operator=( Bot const & rhs );
+	
+	static void signalHandler( int signum );
+	
+	void setupBot( void );
+	void setupSocket( void );
+	void connectServer( void );
+	void receiveData( int fd );
+	void closeBot( void );
 };
-
-bool portKeyCheck( std::string port, std::string key );
-int ft_sendMsg( int fd, std::string msg );
-std::string getFirstString( std::string & str );
-std::deque<std::string> ft_split( std::string & str );
-std::deque<std::string> ft_split( std::string & str, char c );
-std::string ft_erase( std::string & str, char c );
-std::string ft_erase( std::string & str, std::string set );
-bool channelSintax( std::string & str );
-bool nickSintax( std::string & str );
-e_mode_cases modeCases( std::string & str );
-int validPositiveInteger( std::string & str );
-
-template <typename T>
-std::string numberToString(T Number)
-{
-    std::ostringstream ss;
-    ss << Number;
-    return ss.str();
-}
 
 #endif
