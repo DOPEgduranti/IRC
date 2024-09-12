@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:40:40 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/12 12:13:19 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/12 16:43:23 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,20 +37,17 @@
 class Bot {
 private:
 	int _port;
-	struct sockaddr_in _addr;
 	int _socketFd;
 	static bool _signal;
 	std::vector<struct pollfd> _polls;
 	int _serverFd;
 	std::string _serverIpAddr;
 	int _serverPort;
+	std::string _serverKey;
 	Bot( void ) {}
 public:
-	Bot( std::string IpAdd, std::string port ) : _serverIpAddr(IpAdd), _serverPort(static_cast<int>(std::strtol(port.c_str(), NULL, 10))) {}
-	Bot ( Bot const & other ) { *this = other; }
+	Bot( std::string IpAdd, std::string port, std::string key ) : _serverIpAddr(IpAdd), _serverPort(static_cast<int>(std::strtol(port.c_str(), NULL, 10))), _serverKey(key) {}
 	~Bot( void ) {}
-	
-	Bot & operator=( Bot const & rhs );
 	
 	static void signalHandler( int signum );
 	

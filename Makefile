@@ -6,12 +6,11 @@
 #    By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/03 12:26:02 by gduranti          #+#    #+#              #
-#    Updated: 2024/09/12 15:14:59 by gduranti         ###   ########.fr        #
+#    Updated: 2024/09/12 16:19:47 by gduranti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ircserv
-BONUSNAME = bot
 
 CC = c++
 
@@ -53,20 +52,20 @@ all: $(NAME)
 
 clean:
 	rm -f $(NAME)
-	rm -f $(BONUSNAME)
+	rm -f bot
 
 fclean: clean
 
 re: fclean all
 
-bonus:
-	$(CC) $(CFLAGS) $(BONUSRCS) -I$(BONUSDEPS) -o $(BONUSNAME)
+bonus: all
+	$(CC) $(CFLAGS) $(BONUSRCS) -I$(BONUSDEPS) -o bot
 
 start: re
 	./$(NAME) 4444 ciao
 
-bot: bonus
-	./$(BONUSNAME) 10.11.5.6 4444
+robot: bonus
+	./bot 10.11.5.6 4444 ciao
 
 val: re
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s ./$(NAME) 4444 ciao

@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/12 12:40:04 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/12 16:02:07 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,22 +65,13 @@ void Server::setupSocket( void ) {
 	_addr.sin_port = htons(_port);
 	char hostname[256];
 	if (gethostname(hostname, sizeof(hostname)) == -1)
-	{
-		std::cerr << "Error: gethostname failed - " << strerror(errno) << std::endl;
-		throw std::runtime_error("Hostname retrieval failed");
-	}
+		throw std::runtime_error("Hostname retrieval: FAILURE");
 	struct hostent *host = gethostbyname(hostname);
 	if (host == NULL)
-	{
-		std::cerr << "Error: gethostbyname failed - " << hstrerror(h_errno) << std::endl;
-		throw std::runtime_error("Host information retrieval failed");
-	}
+		throw std::runtime_error("Host information retrieval: FAILURE");
 	struct in_addr **addr_list = reinterpret_cast<struct in_addr **>(host->h_addr_list);
 	if (addr_list[0] == NULL)
-	{
-		std::cerr << "Error: no IP addresses found for host" << std::endl;
 		throw std::runtime_error("No IP addresses found");
-	}
 	_addr.sin_addr = *addr_list[0];
 	std::cout << inet_ntoa(_addr.sin_addr) << std::endl;
 	_socketFd = socket(AF_INET, SOCK_STREAM, 0);
@@ -229,10 +220,4 @@ void Server::removeClient( Client & cli ) {
 		}
 	}
 	_clients.erase(std::find(_clients.begin(), _clients.end(), cli));
-	// for(size_t i = 0; i < _clients.size(); i++) {
-	// 	if (_clients[i].getFd() == fd) {
-	// 		_clients.erase(_clients.begin() + i);
-	// 		break ;
-	// 	}
-	// }
 }

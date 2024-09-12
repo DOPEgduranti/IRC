@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:40:09 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/12 15:13:56 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/12 16:10:50 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ bool ipPortCheck( std::string ipAdd, std::string port ) {
 }
 
 int main ( int argc, char **argv ) {
-	if (argc != 3 || ipPortCheck(argv[1], argv[2]) == false) {
+	if (argc != 4 || ipPortCheck(argv[1], argv[2]) == false) {
 		std::cerr << "Error" << std::endl;
 		return 1;
 	}
-	Bot b(argv[1], argv[2]);
+	Bot b(argv[1], argv[2], argv[3]);
 	try{
 		std::cout << "---- BOT ----" << std::endl;
 		signal(SIGINT, Bot::signalHandler);
