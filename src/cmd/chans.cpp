@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:25:32 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/11 12:47:57 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/12 10:23:31 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,8 @@ bool Server::invite( Client & cli, std::deque<std::string> input ) {
 	}
 	(*ch).inviteUser(*cl);
 	RPL_INVITING(cli.getFd(), cli.getNickname(), (*ch).getName(), (*cl).getNickname());
+	for (size_t i = 0; i < (*ch).getUsers().size(); i++)
+		ft_sendMsg((*ch).getUsers()[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " INVITE " + (*cl).getNickname() + " " + (*ch).getName());
 	return true;
 }
 

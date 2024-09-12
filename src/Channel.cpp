@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:28:27 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/11 12:35:14 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/12 10:24:54 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void Channel::setInviteOnly( std::string & str, Client const & cli ) {
 	else if (str == "+i")
 		_inviteOnly = true;
 	for (size_t i = 0; i < _users.size(); i++)
-			ft_sendMsg(_users[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " MODE " + _name + " " + str);
+		ft_sendMsg(_users[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " MODE " + _name + " " + str);
 }
 
 void Channel::setTopicRestricted( std::string & str, Client const & cli ) {
@@ -66,7 +66,7 @@ void Channel::setTopicRestricted( std::string & str, Client const & cli ) {
 	else if (str == "+t")
 		_topicRestricted = true;
 	for (size_t i = 0; i < _users.size(); i++)
-			ft_sendMsg(_users[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " MODE " + _name + " " + str);
+		ft_sendMsg(_users[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " MODE " + _name + " " + str);
 }
 
 bool Channel::setKeyEnable( std::deque<std::string> input, Client const & cli ) {
