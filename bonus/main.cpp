@@ -6,11 +6,11 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:40:09 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/12 12:34:10 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/12 15:13:56 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Bot.hpp"
+#include <Bot.hpp>
 
 bool ipPortCheck( std::string ipAdd, std::string port ) {
 	for (size_t i = 0; i < port.size(); i++) {

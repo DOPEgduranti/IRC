@@ -6,11 +6,11 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:54:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/12 12:58:58 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/12 15:14:06 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Bot.hpp"
+#include <Bot.hpp>
 
 bool Bot::_signal = false;
 

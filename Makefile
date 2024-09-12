@@ -6,17 +6,19 @@
 #    By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/03 12:26:02 by gduranti          #+#    #+#              #
-#    Updated: 2024/07/11 15:17:16 by gduranti         ###   ########.fr        #
+#    Updated: 2024/09/12 15:14:59 by gduranti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ircserv
+BONUSNAME = bot
 
 CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g
 
 DEPS = includes
+BONUSDEPS = bonus
 
 SRCFOLDER = src
 SRC = main.cpp \
@@ -37,6 +39,11 @@ MSG = errors.cpp \
 	replies.cpp
 MSGS = $(addprefix $(MSGFOLDER)/, $(MSG))
 
+BONUSFOLDER = bonus
+BONUSRC = main.cpp \
+		Bot.cpp
+BONUSRCS = $(addprefix $(BONUSFOLDER)/, $(BONUSRC))
+
 SRCS = $(addprefix $(SRCFOLDER)/, $(SRC) $(CMDS) $(MSGS))
 
 $(NAME):
@@ -46,14 +53,22 @@ all: $(NAME)
 
 clean:
 	rm -f $(NAME)
+	rm -f $(BONUSNAME)
 
 fclean: clean
 
 re: fclean all
 
+bonus:
+	$(CC) $(CFLAGS) $(BONUSRCS) -I$(BONUSDEPS) -o $(BONUSNAME)
+
 start: re
 	./$(NAME) 4444 ciao
 
+bot: bonus
+	./$(BONUSNAME) 10.11.5.6 4444
+
 val: re
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s ./$(NAME) 4444 ciao
+
 .PHONY: all clean fclean re
