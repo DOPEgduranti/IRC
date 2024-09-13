@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:54:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/13 10:32:31 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/13 12:00:02 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void Bot::setupBot( void ) {
 	std::cout << "Setting bot socket" << std::endl;
 	setupSocket();
 	std::cout << "Bot socket initialization: SUCCESS" << std::endl;
-	std::string loginMessage = "PASS " + _serverKey + "\r\nNICK bot\r\nUSER b0 b1 b2 b3\r\nJOIN #botchan\r\nTOPIC #botchan :Welcome to the bot channel!\r\nMODE #botchan +t\r\n";
+	std::string loginMessage = "PASS " + _serverKey + "\r\nNICK bot\r\nUSER IRCbot b1 b2 :Hi, I am a bot!\r\n";
 	send(_socketOut, loginMessage.c_str(), loginMessage.size(), 0);
 	std::cout << "Bot fd:" << _socketOut << " Server fd:" << _socketIn << std::endl;
 	while (!_signal) {
@@ -87,11 +87,31 @@ void Bot::receiveData( int fd ) {
 	else {
 		buffer[bytes] = 0;
 		std::string str = buffer;
-		// scrivere qui cosa farne dei messaggi ricevuti dal server
+		if (str.find(":server 004") != std::string::npos) {
+			std::string message = "JOIN #botchan\r\nTOPIC #botchan :Welcome to the bot channel!\r\nMODE #botchan +t\r\n";
+			send(_socketOut, message.c_str(), message.size(), 0);
+		}
+		else if (str.find("PRIVMSG") != std::string::npos)
+			answer(str);
 	}
 }
 
 void Bot::closeBot( void ) {
 	close(_socketOut);
 	std::cout << "Bot shutdown: SUCCESS" << std::endl;
+}
+
+void Bot::answer( std::string str ) {
+	str.erase(str.begin());
+	std::string name = str.substr(0, str.find(' '));
+	std::string chan = str.substr(str.find("PRIVMSG"), str.find(':') - str.find("PRIVMSG"));
+	chan = chan.substr(8);
+	chan.erase(std::find(chan.begin(), chan.end(), ' '));
+	std::string message = str.substr(str.find(':') + 1, str.find('\r') - str.find(':') - 1);
+	std::string ans = "PRIVMSG ";
+	if (chan == "bot")
+		ans += name + " :Hi, nice to meet you!\r\n";
+	else
+		ans += chan + " :Oh, you are approcing me!\r\n";
+	send(_socketOut, ans.c_str(), ans.size(), 0);
 }

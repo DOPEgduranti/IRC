@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:40:40 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/12 16:51:08 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/13 11:23:53 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ public:
 	void connectServer( void );
 	void receiveData( int fd );
 	void closeBot( void );
+
+	void answer( std::string str );
 };
 
 #endif
