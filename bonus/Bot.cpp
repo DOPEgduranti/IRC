@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:54:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/13 12:00:02 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/13 12:46:00 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,12 @@ void Bot::answer( std::string str ) {
 	chan.erase(std::find(chan.begin(), chan.end(), ' '));
 	std::string message = str.substr(str.find(':') + 1, str.find('\r') - str.find(':') - 1);
 	std::string ans = "PRIVMSG ";
-	if (chan == "bot")
+	if (chan == "bot") {
 		ans += name + " :Hi, nice to meet you!\r\n";
-	else
+		send(_socketOut, ans.c_str(), ans.size(), 0);
+	}
+	else if (message.find("bot") != std::string::npos) {
 		ans += chan + " :Oh, you are approcing me!\r\n";
-	send(_socketOut, ans.c_str(), ans.size(), 0);
+		send(_socketOut, ans.c_str(), ans.size(), 0);
+	}
 }
