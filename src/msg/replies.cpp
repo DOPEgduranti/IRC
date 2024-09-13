@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 13:10:36 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/11 16:24:59 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/13 10:56:04 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ void RPL_WHOREPLY( int fd, std::string userNick, Channel const & chan ) {
 
 void RPL_WHOREPLY( int fd, std::string userNick, std::string channel, Client const & cli ) {
 	std::string message = ":server 352 " + userNick + " " + channel + " " + cli.getUsername() + " " + cli.getHostName() + " server " + cli.getNickname() + " H :0 " + cli.getRealName() + "\r\n";
+	if (cli.getNickname() == "bot")
+		message = ":server 352 " + userNick + " " + channel + " " + cli.getUsername() + " " + cli.getHostName() + " server " + cli.getNickname() + " Hb :0 " + cli.getRealName() + "\r\n";
 	send(fd, message.c_str(), message.size(), 0);
 }
 

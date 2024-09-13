@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/12 16:02:07 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/13 10:48:08 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,18 +157,25 @@ bool Server::clientLogin( Client & cli, std::deque<std::string> input ) {
 
 void Server::receiveData( int fd ) {
 	char buffer[1024];
-	memset(buffer, 0, sizeof(buffer));
-	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
+	ssize_t bytes;
+	std::string str;
+	do {
+		memset(buffer, 0, sizeof(buffer));
+		bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
+		buffer[bytes] = 0;
+		str += buffer;
+	} while (str.find('\n') == std::string::npos && bytes > 0);
+	std::cout << "bytes:" << bytes << std::endl;
 	std::vector<Client>::iterator cli = std::find(_clients.begin(), _clients.end(), fd);
 	std::cout << "Client <" << (*cli).getFd() << "> sent this: '" << buffer << "'" << std::endl;
 	if (bytes <= 0) {
 		std::cout << "Client <" << (*cli).getFd() << "> has Disconnected" << std::endl;
-		removeClient(*cli);
+		std::deque<std::string> tmp;
+		tmp.push_back("QUIT");
+		quit(*cli, tmp);
 		close(fd);
 	}
 	else {
-		buffer[bytes] = 0;
-		std::string str = buffer;
 		std::deque<std::string> dq = ft_split(str);
 		for (size_t i = 0; i < dq.size(); i++)
 			std::cout << "dq[" << i << "]: '" << dq[i] << "'" << std::endl;

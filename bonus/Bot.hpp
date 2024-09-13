@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:40:40 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/12 16:43:23 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/12 16:51:08 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,10 @@
 
 class Bot {
 private:
-	int _port;
-	int _socketFd;
+	int _socketOut;
+	int _socketIn;
 	static bool _signal;
 	std::vector<struct pollfd> _polls;
-	int _serverFd;
 	std::string _serverIpAddr;
 	int _serverPort;
 	std::string _serverKey;
