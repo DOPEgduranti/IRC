@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:57:24 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/16 12:10:39 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:48:36 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void ERR_NONICKNAMEGIVEN( int fd, std::string nickname );
 	- Returned when a NICK message is processed that results
 	in an attempt to change to a currently existing nickname.
 */
-void ERR_NICKNAMEINUSE( int fd, std::string nickname );
+void ERR_NICKNAMEINUSE( int fd, std::string userNick, std::string nickname );
 
 /*
 	432 ERR_ERRONEUSNICKNAME
@@ -59,7 +59,7 @@ void ERR_NICKNAMEINUSE( int fd, std::string nickname );
 	characters which do not fall in the defined set. See
 	section x.x.x for details on valid nicknames.
 */
-void ERR_ERRONEUSNICKNAME( int fd, std::string nickname );
+void ERR_ERRONEUSNICKNAME( int fd, std::string userNick, std::string nickname );
 
 /*
 	405 ERR_TOOMANYCHANNELS

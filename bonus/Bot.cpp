@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:54:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/13 12:46:00 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:45:14 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void Bot::setupBot( void ) {
 	std::cout << "Setting bot socket" << std::endl;
 	setupSocket();
 	std::cout << "Bot socket initialization: SUCCESS" << std::endl;
-	std::string loginMessage = "PASS " + _serverKey + "\r\nNICK bot\r\nUSER IRCbot b1 b2 :Hi, I am a bot!\r\n";
+	std::string loginMessage = "PASS " + _serverKey + "\r\nNICK " + _name + "\r\nUSER IRCbot b0 b0 :Hi, I am a bot!\r\n";
 	send(_socketOut, loginMessage.c_str(), loginMessage.size(), 0);
 	std::cout << "Bot fd:" << _socketOut << " Server fd:" << _socketIn << std::endl;
 	while (!_signal) {
@@ -109,12 +109,35 @@ void Bot::answer( std::string str ) {
 	chan.erase(std::find(chan.begin(), chan.end(), ' '));
 	std::string message = str.substr(str.find(':') + 1, str.find('\r') - str.find(':') - 1);
 	std::string ans = "PRIVMSG ";
-	if (chan == "bot") {
+	if (chan == _name) {
 		ans += name + " :Hi, nice to meet you!\r\n";
 		send(_socketOut, ans.c_str(), ans.size(), 0);
 	}
-	else if (message.find("bot") != std::string::npos) {
-		ans += chan + " :Oh, you are approcing me!\r\n";
+	else if (message.find(_name) != std::string::npos) {
+		ans += chan + " :" + randomMessage() + "\r\n";
 		send(_socketOut, ans.c_str(), ans.size(), 0);
 	}
+}
+
+std::string Bot::randomMessage( void ) {
+	std::vector<std::string> vec;
+	vec.push_back("I'm gonna FIX that spaghetti!");
+	vec.push_back("I REJECT MY HUMANITY, JOJO!!!");
+	vec.push_back("Your Stand is like your asshole: you can't go around showing it off to other people.");
+	vec.push_back("You pissed me off.");
+	vec.push_back("German Science is the best in the world!");
+	vec.push_back("Oh, you are approcing me!");
+	vec.push_back("ZA WARUDO!");
+	vec.push_back("MUDA MUDA MUDA MUDA MUDA");
+	vec.push_back("ORA ORA ORA ORA ORA");
+	vec.push_back("WRYYYY");
+	vec.push_back("Your next line is...");
+	vec.push_back("Nigerundayo, Smokey!");
+	vec.push_back("Yare yare daze");
+	vec.push_back("You think it was joust a normal robot.. but it was me, DIO!");
+	vec.push_back("Yare yare daze");
+	vec.push_back("I can’t beat the shit out of you without getting closer.");
+	vec.push_back("Rerorerorerorerorerorerorerorero");
+	vec.push_back("My name is Yoshikage Kira, I am 33 years old.");
+	return(vec[rand() % vec.size()]);
 }

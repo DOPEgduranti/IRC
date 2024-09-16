@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:20:31 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/16 11:03:44 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:54:16 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ bool Server::nick( Client & cli, std::deque<std::string> input ) {
 	}
 	input.pop_front();
 	if (!nickSintax(input.front())) {
-		ERR_ERRONEUSNICKNAME(cli.getFd(), cli.getNickname());
+		ERR_ERRONEUSNICKNAME(cli.getFd(), cli.getNickname(), input.front());
 			return false;
 	}
 	for (size_t i = 0; i < _clients.size(); i++) {
 		if (input.front() == _clients[i].getNickname()) {
-			ERR_NICKNAMEINUSE(cli.getFd(), cli.getNickname());
+			ERR_NICKNAMEINUSE(cli.getFd(), cli.getNickname(), input.front());
 			return false;
 		}
 	}

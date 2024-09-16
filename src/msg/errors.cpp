@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:59:38 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/11 12:18:10 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:50:17 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ void ERR_NONICKNAMEGIVEN( int fd, std::string nickname ) {
 	send(fd, message.c_str(), message.size(), 0);
 }
 
-void ERR_NICKNAMEINUSE( int fd, std::string nickname ) {
-	std::string message = ":server 433 " + nickname + " " + nickname + " :Nickname is already in use\r\n" ;
+void ERR_NICKNAMEINUSE( int fd, std::string userNick, std::string nickname ) {
+	std::string message = ":server 433 " + userNick + " " + nickname + " :Nickname is already in use\r\n" ;
 	send(fd, message.c_str(), message.size(), 0);
 }
 
-void ERR_ERRONEUSNICKNAME( int fd, std::string nickname ) {
-	std::string message = ":server 432 " + nickname + " " + nickname + " :Erroneus nickname\r\n" ;
+void ERR_ERRONEUSNICKNAME( int fd, std::string userNick, std::string nickname ) {
+	std::string message = ":server 432 " + userNick + " " + nickname + " :Erroneus nickname\r\n" ;
 	send(fd, message.c_str(), message.size(), 0);
 }
 

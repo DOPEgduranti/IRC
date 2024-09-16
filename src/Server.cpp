@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/16 11:47:54 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:07:48 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void Server::acceptClient( void ) {
 }
 
 bool Server::clientLogin( Client & cli, std::deque<std::string> input ) {
-	if (cli.getNickname().empty() || cli.getUsername().empty()) {
+	if (cli.getNickname() == "'none'" || cli.getUsername().empty()) {
 		if (cli.getLogged() == false) {
 			if (input.front() == "PASS")
 				pass(cli, input);
@@ -160,7 +160,7 @@ void Server::receiveData( int fd ) {
 	char buffer[1024];
 	memset(buffer, 0, sizeof(buffer));
 	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
-	std::cout << "Client <" << (*cli).getFd() << "bytes sent:" << bytes << std::endl;
+	std::cout << "Client <" << (*cli).getFd() << "> bytes sent:" << bytes << std::endl;
 	if (bytes <= 0) {
 		std::cout << "Client <" << (*cli).getFd() << "> has Disconnected" << std::endl;
 		std::deque<std::string> tmp;

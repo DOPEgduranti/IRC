@@ -6,14 +6,14 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:54:21 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/11 12:14:36 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:08:01 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Client.hpp>
 #include <msg.hpp>
 
-Client::Client( void ) : _nickname(""), _username("") , _logged(false), _loginMsg(false) {
+Client::Client( void ) : _nickname("'none'"), _username("") , _logged(false), _loginMsg(false) {
 	
 }
 
