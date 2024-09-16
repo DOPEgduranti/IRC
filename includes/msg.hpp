@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:57:24 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/12 10:29:57 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 10:08:52 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,5 +286,31 @@ void RPL_LIST( int fd, std::string nickname, std::string channel, size_t visible
     and end reply must be sent.
 */
 void RPL_LISTEND( int fd, std::string nickname );
+
+/*
+	311 RPL_WHOISUSER
+    "<nick> <user> <host> * :<real name>"
+	- Replies 311 - 313, 317 - 319 are all replies
+    generated in response to a WHOIS message.  Given that
+    there are enough parameters present, the answering
+    server must either formulate a reply out of the above
+    numerics (if the query nick is found) or return an
+    error reply.  The ’*’ in RPL_WHOISUSER is there as
+    the literal character and not as a wild card.  For
+    each reply set, only RPL_WHOISCHANNELS may appear
+    more than once (for long lists of channel names).
+    The ’@’ and ’+’ characters next to the channel name
+    indicate whether a client is a channel operator or
+    has been granted permission to speak on a moderated
+    channel.  The RPL_ENDOFWHOIS reply is used to mark
+    the end of processing a WHOIS message.
+*/
+void RPL_WHOISUSER( int fd, std::string userNick, Client const & cli );
+
+/*
+	318 RPL_ENDOFWHOIS
+    "<nick> :End of /WHOIS list"
+*/
+void RPL_ENDOFWHOIS( int fd, std::string userNick, std::string nickname );
 
 #endif

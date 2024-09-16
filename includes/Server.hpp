@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:52:42 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/11 15:57:14 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 10:43:31 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ public:
 	void acceptClient( void );
 	bool clientLogin( Client & cli, std::deque<std::string> input );
 	void receiveData( int fd );
+	void doCommand( Client & cli, std::string command );
 	void closePolls( void );
 	void removeClient( Client & cli );
 
@@ -73,6 +74,7 @@ public:
 	bool who( Client & cli, std::deque<std::string> input );
 	bool userhost( Client & cli, std::deque<std::string> input );
 	bool list( Client & cli, std::deque<std::string> input );
+	bool whois( Client & cli, std::deque<std::string> input );
 };
 
 #endif

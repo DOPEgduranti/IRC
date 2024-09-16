@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:24:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/11 16:21:49 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 10:10:38 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,5 +98,24 @@ bool Server::list( Client & cli, std::deque<std::string> input ) {
 		}
 	}
 	RPL_LISTEND(cli.getFd(), cli.getNickname());
+	return true ;
+}
+
+bool Server::whois( Client & cli, std::deque<std::string> input ) {
+	if (input.size() < 2) {
+		ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "WHOIS");
+		return false;
+	}
+	input.pop_front();
+	std::deque<std::string> dq = ft_split(input.front(), ',');
+	while (!dq.empty()) {
+		std::vector<Client>::iterator cliIt = std::find(_clients.begin(), _clients.end(), dq.front());
+		if (cliIt != _clients.end())
+			RPL_WHOISUSER(cli.getFd(), cli.getNickname(), *cliIt);
+		else
+			ERR_NOSUCHNICK(cli.getFd(), cli.getNickname(), dq.front());
+		dq.pop_front();
+	}
+	RPL_ENDOFWHOIS(cli.getFd(), cli.getNickname(), input.front());
 	return true ;
 }

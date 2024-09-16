@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/13 12:29:30 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 10:45:46 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ Server::Server( std::string port, std::string key ) : _port(static_cast<int>(std
 	_cmds.insert(functions("PART", &Server::part));
 	_cmds.insert(functions("NAMES", &Server::names));
 	_cmds.insert(functions("LIST", &Server::list));
+	_cmds.insert(functions("WHOIS", &Server::whois));
 }
 
 Server & Server::operator=( Server const & rhs ) {
@@ -156,52 +157,57 @@ bool Server::clientLogin( Client & cli, std::deque<std::string> input ) {
 }
 
 void Server::receiveData( int fd ) {
-	char buffer[1024];
-	ssize_t bytes;
-	std::string str;
-	do {
-		memset(buffer, 0, sizeof(buffer));
-		bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
-		buffer[bytes] = 0;
-		str += buffer;
-	} while (str.find('\n') == std::string::npos && bytes > 0);
-	std::cout << "bytes:" << bytes << std::endl;
 	std::vector<Client>::iterator cli = std::find(_clients.begin(), _clients.end(), fd);
-	std::cout << "Client <" << (*cli).getFd() << "> sent this: '" << buffer << "'" << std::endl;
+	char buffer[1024];
+	memset(buffer, 0, sizeof(buffer));
+	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
+	std::cout << "Client <" << (*cli).getFd() << "bytes sent:" << bytes << std::endl;
 	if (bytes <= 0) {
 		std::cout << "Client <" << (*cli).getFd() << "> has Disconnected" << std::endl;
 		std::deque<std::string> tmp;
 		tmp.push_back("QUIT");
 		quit(*cli, tmp);
 		close(fd);
+		return ;
 	}
-	else {
-		std::deque<std::string> dq = ft_split(str);
-		for (size_t i = 0; i < dq.size(); i++)
-			std::cout << "dq[" << i << "]: '" << dq[i] << "'" << std::endl;
-		while (!dq.empty()) {
-			std::deque<std::string> input = ft_split(dq.front(), ' ');
-			for (size_t i = 0; i < input.size(); i++)
-				std::cout << "input[" << i << "]: '" << input[i] << "'" << std::endl;
-			if (input.empty() || input.front().empty()) {
-				dq.pop_front();
-				continue ;
-			}
-			if (_cmds.find(input.front()) == _cmds.end()) {
-				ft_sendMsg(fd, ":server 400 " + (*cli).getNickname() + " :command '" + input.front() + "' not found");
-				dq.pop_front();
-				continue ;
-			}
-			else if (input.front() == "HELP")
-				help(*cli, input);
-			else if (clientLogin(*cli, input) == false) {
-				dq.pop_front();
-				continue ;
-			}
-			else
-				(this->*(_cmds[input.front()]))(*cli, input);
+	buffer[bytes] = 0;
+	std::string str = buffer;
+	std::cout << "Client <" << (*cli).getFd() << "> sent this: '" << buffer << "'" << std::endl;
+	if (str.find('\n') == std::string::npos) {
+		(*cli).setOldMsg((*cli).getOldMsg() + str);
+		return ;
+	}
+	str = (*cli).getOldMsg() + buffer;
+	(*cli).setOldMsg("");
+	doCommand(*cli, str);
+}
+
+void Server::doCommand( Client & cli, std::string command ) {
+	std::deque<std::string> dq = ft_split(command);
+	for (size_t i = 0; i < dq.size(); i++)
+		std::cout << "dq[" << i << "]: '" << dq[i] << "'" << std::endl;
+	while (!dq.empty()) {
+		std::deque<std::string> input = ft_split(dq.front(), ' ');
+		for (size_t i = 0; i < input.size(); i++)
+			std::cout << "input[" << i << "]: '" << input[i] << "'" << std::endl;
+		if (input.empty() || input.front().empty()) {
 			dq.pop_front();
+			continue ;
 		}
+		if (_cmds.find(input.front()) == _cmds.end()) {
+			ft_sendMsg(cli.getFd(), ":server 400 " + cli.getNickname() + " :command '" + input.front() + "' not found");
+			dq.pop_front();
+			continue ;
+		}
+		else if (input.front() == "HELP")
+			help(cli, input);
+		else if (clientLogin(cli, input) == false) {
+			dq.pop_front();
+			continue ;
+		}
+		else
+			(this->*(_cmds[input.front()]))(cli, input);
+		dq.pop_front();
 	}
 }
 

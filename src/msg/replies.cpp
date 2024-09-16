@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 13:10:36 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/13 10:56:04 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 10:06:02 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,5 +115,15 @@ void RPL_LIST( int fd, std::string nickname, std::string channel, size_t visible
 
 void RPL_LISTEND( int fd, std::string nickname ) {
 	std::string message = ":server 323 " + nickname + " :End of /LIST\r\n";
+	send(fd, message.c_str(), message.size(), 0);
+}
+
+void RPL_WHOISUSER( int fd, std::string userNick, Client const & cli ) {
+	std::string message = ":server 311 " + userNick + " " + cli.getNickname() + " " + cli.getUsername() + " " + cli.getHostName() + " * :" + cli.getRealName() + "\r\n";
+	send(fd, message.c_str(), message.size(), 0);
+}
+
+void RPL_ENDOFWHOIS( int fd, std::string userNick, std::string nickname ) {
+	std::string message = ":server 318 " + userNick + " " + nickname + " :End of /WHOIS list\r\n";
 	send(fd, message.c_str(), message.size(), 0);
 }
