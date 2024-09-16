@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:51:47 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/16 13:11:23 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 16:22:50 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,11 @@ std::deque<std::string> ft_split( std::string & str, char c ) {
 		return deq;
 	}
 	std::string tmp;
+	bool dots = false;
 	for (size_t i = 0; i < str.size(); i++) {
-		if (str[i] == ':') {
+		if (str[i] == ':' && !dots) {
 			c = '\0';
+			dots = true;
 			continue ;
 		}
 		if (str[i] == c && !tmp.empty()) {

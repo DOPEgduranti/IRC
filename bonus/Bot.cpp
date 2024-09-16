@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:54:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/16 12:45:14 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 16:32:37 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,14 +103,29 @@ void Bot::closeBot( void ) {
 
 void Bot::answer( std::string str ) {
 	str.erase(str.begin());
-	std::string name = str.substr(0, str.find(' '));
+	std::string cli = str.substr(0, str.find(' '));
 	std::string chan = str.substr(str.find("PRIVMSG"), str.find(':') - str.find("PRIVMSG"));
 	chan = chan.substr(8);
 	chan.erase(std::find(chan.begin(), chan.end(), ' '));
 	std::string message = str.substr(str.find(':') + 1, str.find('\r') - str.find(':') - 1);
 	std::string ans = "PRIVMSG ";
 	if (chan == _name) {
-		ans += name + " :Hi, nice to meet you!\r\n";
+		ans += cli + " :";
+		if (message.find("help") != std::string::npos) {
+			ans += "Here's a list of command I can provide you\r\n";
+			send(_socketOut, ans.c_str(), ans.size(), 0);
+			ans = "PRIVMSG " + cli + " :";
+			ans += "list users : shows all logged users on the server\r\n";
+			send(_socketOut, ans.c_str(), ans.size(), 0);
+			ans = "PRIVMSG " + cli + " :";
+			ans += "tell me a joke : tells you a joke\r\n";
+			send(_socketOut, ans.c_str(), ans.size(), 0);
+			ans = "PRIVMSG " + cli + " :";
+			ans += "answer= : ask me a yes or no question 'answer=<question>' and I'll tell your future\r\n";
+			send(_socketOut, ans.c_str(), ans.size(), 0);
+		}
+		else
+			ans += "Nice to meet you " + cli + "! How can I help you?\r\n";
 		send(_socketOut, ans.c_str(), ans.size(), 0);
 	}
 	else if (message.find(_name) != std::string::npos) {
@@ -136,7 +151,7 @@ std::string Bot::randomMessage( void ) {
 	vec.push_back("Yare yare daze");
 	vec.push_back("You think it was joust a normal robot.. but it was me, DIO!");
 	vec.push_back("Yare yare daze");
-	vec.push_back("I can’t beat the shit out of you without getting closer.");
+	vec.push_back("I can't beat the shit out of you without getting closer.");
 	vec.push_back("Rerorerorerorerorerorerorerorero");
 	vec.push_back("My name is Yoshikage Kira, I am 33 years old.");
 	return(vec[rand() % vec.size()]);
