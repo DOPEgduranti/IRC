@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:20:31 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/13 12:45:54 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 11:03:44 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ bool Server::quit( Client & cli, std::deque<std::string> input ) {
 	if (!input.empty())
 		message = input.front();
 	for (size_t i = 0; i < _clients.size(); i++)
-		ft_sendMsg(_clients[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " QUIT " + message);
+		ft_sendMsg(_clients[i].getFd(), ":" + cli.getNickname() + "!" + cli.getUsername() + "@" + cli.getHostName() + " QUIT :" + message);
 	removeClient(cli);
 	return true;
 }

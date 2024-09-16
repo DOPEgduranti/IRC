@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 12:24:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/16 10:10:38 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:12:27 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,19 +103,24 @@ bool Server::list( Client & cli, std::deque<std::string> input ) {
 
 bool Server::whois( Client & cli, std::deque<std::string> input ) {
 	if (input.size() < 2) {
-		ERR_NEEDMOREPARAMS(cli.getFd(), cli.getNickname(), "WHOIS");
+		ERR_NONICKNAMEGIVEN(cli.getFd(), cli.getNickname());
 		return false;
 	}
 	input.pop_front();
 	std::deque<std::string> dq = ft_split(input.front(), ',');
 	while (!dq.empty()) {
 		std::vector<Client>::iterator cliIt = std::find(_clients.begin(), _clients.end(), dq.front());
-		if (cliIt != _clients.end())
+		if (cliIt != _clients.end()) {
 			RPL_WHOISUSER(cli.getFd(), cli.getNickname(), *cliIt);
+			RPL_WHOISSERVER(cli.getFd(), cli.getNickname(), dq.front());
+			RPL_WHOISCHANNELS(cli.getFd(), cli.getNickname(), *cliIt);
+			if ((*cliIt).getRealName() == "Hi, I am a bot!")
+				ft_sendMsg(cli.getFd(), ":server 335 " + cli.getNickname() + " " + dq.front() + " :is a Bot on IRCv3");
+			RPL_ENDOFWHOIS(cli.getFd(), cli.getNickname(), dq.front());
+		}
 		else
 			ERR_NOSUCHNICK(cli.getFd(), cli.getNickname(), dq.front());
 		dq.pop_front();
 	}
-	RPL_ENDOFWHOIS(cli.getFd(), cli.getNickname(), input.front());
 	return true ;
 }

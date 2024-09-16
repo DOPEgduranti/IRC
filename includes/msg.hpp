@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:57:24 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/16 10:08:52 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:10:39 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,6 +306,25 @@ void RPL_LISTEND( int fd, std::string nickname );
     the end of processing a WHOIS message.
 */
 void RPL_WHOISUSER( int fd, std::string userNick, Client const & cli );
+
+/*
+	312 RPL_WHOISSERVER
+    "<nick> <server> :<server info>"
+*/
+void RPL_WHOISSERVER( int fd, std::string userNick, std::string nickname );
+
+/*
+	319 RPL_WHOISCHANNELS
+    "<nick> :{[@|+]<channel><space>}"
+	- Sent as a reply to the WHOIS command, this numeric lists 
+	the channels that the client with the nickname <nick> is joined 
+	to and their status in these channels. <prefix> is the highest 
+	channel membership prefix that the client has in that channel, 
+	if the client has one. <channel> is the name of a channel that 
+	the client is joined to. The last parameter of this numeric is a 
+	list of [prefix]<channel> pairs, delimited by a SPACE character (' ', 0x20).
+*/
+void RPL_WHOISCHANNELS( int fd, std::string userNick, Client const & cli );
 
 /*
 	318 RPL_ENDOFWHOIS

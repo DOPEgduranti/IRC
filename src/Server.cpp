@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:35:41 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/16 10:45:46 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 11:47:54 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ Server::Server( std::string port, std::string key ) : _port(static_cast<int>(std
 	_cmds.insert(functions("PART", &Server::part));
 	_cmds.insert(functions("NAMES", &Server::names));
 	_cmds.insert(functions("LIST", &Server::list));
-	_cmds.insert(functions("WHOIS", &Server::whois));
+	_cmds.insert(functions("whois", &Server::whois));
 }
 
 Server & Server::operator=( Server const & rhs ) {
@@ -95,8 +95,7 @@ void Server::setupSocket( void ) {
 void Server::setupServer( void ) {
 	std::cout << "Setting server socket" << std::endl;
 	setupSocket();
-	std::cout << "Server socket initialization: SUCCESS" << std::endl;
-	std::cout << "Server is waiting for connections" << std::endl;
+	std::cout << "Server socket initialization: SUCCESS" << std::endl << "Server is waiting for connections" << std::endl;
 	while (!_signal) {
 		if (poll(&(*_polls.begin()), _polls.size(), -1) == -1 && !_signal)
 			throw std::runtime_error("poll(): FAILURE");
@@ -167,7 +166,6 @@ void Server::receiveData( int fd ) {
 		std::deque<std::string> tmp;
 		tmp.push_back("QUIT");
 		quit(*cli, tmp);
-		close(fd);
 		return ;
 	}
 	buffer[bytes] = 0;
@@ -213,12 +211,12 @@ void Server::doCommand( Client & cli, std::string command ) {
 
 void Server::closePolls( void ) {
 	for (size_t i = 0; i < _clients.size(); i++) {
-		std::cout << "Client <" << _clients[i].getFd() << "> disconnection: SUCCESS" << std::endl;
 		close(_clients[i].getFd());
+		std::cout << "Client <" << _clients[i].getFd() << "> disconnection: SUCCESS" << std::endl;
 	}
 	if (_socketFd != -1) {
-		std::cout << "Server <" << _socketFd << "> shutdown: SUCCESS" << std::endl;
 		close(_socketFd);
+		std::cout << "Server <" << _socketFd << "> shutdown: SUCCESS" << std::endl;
 	}
 }
 

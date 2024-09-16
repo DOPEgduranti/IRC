@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 13:10:36 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/16 10:06:02 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:14:09 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,10 @@ void RPL_WHOREPLY( int fd, std::string userNick, Channel const & chan ) {
 }
 
 void RPL_WHOREPLY( int fd, std::string userNick, std::string channel, Client const & cli ) {
-	std::string message = ":server 352 " + userNick + " " + channel + " " + cli.getUsername() + " " + cli.getHostName() + " server " + cli.getNickname() + " H :0 " + cli.getRealName() + "\r\n";
-	if (cli.getNickname() == "bot")
-		message = ":server 352 " + userNick + " " + channel + " " + cli.getUsername() + " " + cli.getHostName() + " server " + cli.getNickname() + " Hb :0 " + cli.getRealName() + "\r\n";
+	std::string message = ":server 352 " + userNick + " " + channel + " " + cli.getUsername() + " " + cli.getHostName() + " server " + cli.getNickname() + " H";
+	if (cli.getRealName() == "Hi, I am a bot!")
+		message += 'b';
+	message += " :0 " + cli.getRealName() + "\r\n";
 	send(fd, message.c_str(), message.size(), 0);
 }
 
@@ -120,6 +121,24 @@ void RPL_LISTEND( int fd, std::string nickname ) {
 
 void RPL_WHOISUSER( int fd, std::string userNick, Client const & cli ) {
 	std::string message = ":server 311 " + userNick + " " + cli.getNickname() + " " + cli.getUsername() + " " + cli.getHostName() + " * :" + cli.getRealName() + "\r\n";
+	send(fd, message.c_str(), message.size(), 0);
+}
+
+void RPL_WHOISSERVER( int fd, std::string userNick, std::string nickname ) {
+	std::string message = ":server 312 " + userNick + " " + nickname + " server :sono un server IRC\r\n";
+	send(fd, message.c_str(), message.size(), 0);
+}
+
+void RPL_WHOISCHANNELS( int fd, std::string userNick, Client const & cli ) {
+	std::string message = ":server 319 " + userNick + " " + cli.getNickname() + " :";
+	for (size_t i = 0; i < cli.getChannels().size(); i++) {
+		if (std::find(cli.getChannels()[i].getOperators().begin(), cli.getChannels()[i].getOperators().end(), cli) != cli.getChannels()[i].getOperators().end())
+			message += '@';
+		message += cli.getChannels()[i].getName();
+		if (i + 1 < cli.getChannels().size())
+			message += " ";
+	}
+	message += "\r\n";
 	send(fd, message.c_str(), message.size(), 0);
 }
 
