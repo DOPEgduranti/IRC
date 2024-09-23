@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:51:58 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/12 11:50:52 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/20 10:26:39 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,9 @@ e_mode_cases modeCases( std::string & str );
 int validPositiveInteger( std::string & str );
 
 template <typename T>
-std::string numberToString(T Number)
-{
+std::string numberToString( T nbr ) {
     std::ostringstream ss;
-    ss << Number;
+    ss << nbr;
     return ss.str();
 }
 

@@ -6,13 +6,19 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:54:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/16 16:32:37 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/23 11:51:55 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Bot.hpp>
 
 bool Bot::_signal = false;
+
+Bot::Bot( std::string IpAdd, std::string port, std::string key ) : _name("bot"), _serverIpAddr(IpAdd), _serverPort(static_cast<int>(std::strtol(port.c_str(), NULL, 10))), _serverKey(key) {
+	fillSentences();
+	fillFutures();
+	fillJokes();
+}
 
 void Bot::signalHandler( int signum ) {
 	(void)signum;
@@ -93,6 +99,8 @@ void Bot::receiveData( int fd ) {
 		}
 		else if (str.find("PRIVMSG") != std::string::npos)
 			answer(str);
+		else if (str.find("Online users:") != std::string::npos)
+			listUsers(str);
 	}
 }
 
@@ -121,38 +129,104 @@ void Bot::answer( std::string str ) {
 			ans += "tell me a joke : tells you a joke\r\n";
 			send(_socketOut, ans.c_str(), ans.size(), 0);
 			ans = "PRIVMSG " + cli + " :";
-			ans += "answer= : ask me a yes or no question 'answer=<question>' and I'll tell your future\r\n";
+			ans += "future= : ask me a yes or no question 'future=<question>' and I'll tell your future\r\n";
 			send(_socketOut, ans.c_str(), ans.size(), 0);
 		}
+		else if (message == "list users") {
+			_client = cli;
+			ans = "NAMES\r\n";
+		}
+		else if (message == "tell me a joke")
+			ans += _jokes[rand() % _jokes.size()] + "\r\n";
+		else if (message.find("future=") != std::string::npos)
+			ans += tellFuture(message) + "\r\n";
 		else
 			ans += "Nice to meet you " + cli + "! How can I help you?\r\n";
 		send(_socketOut, ans.c_str(), ans.size(), 0);
 	}
 	else if (message.find(_name) != std::string::npos) {
-		ans += chan + " :" + randomMessage() + "\r\n";
+		ans += chan + " :" + _sentences[rand() % _sentences.size()] + "\r\n";
 		send(_socketOut, ans.c_str(), ans.size(), 0);
 	}
 }
 
-std::string Bot::randomMessage( void ) {
-	std::vector<std::string> vec;
-	vec.push_back("I'm gonna FIX that spaghetti!");
-	vec.push_back("I REJECT MY HUMANITY, JOJO!!!");
-	vec.push_back("Your Stand is like your asshole: you can't go around showing it off to other people.");
-	vec.push_back("You pissed me off.");
-	vec.push_back("German Science is the best in the world!");
-	vec.push_back("Oh, you are approcing me!");
-	vec.push_back("ZA WARUDO!");
-	vec.push_back("MUDA MUDA MUDA MUDA MUDA");
-	vec.push_back("ORA ORA ORA ORA ORA");
-	vec.push_back("WRYYYY");
-	vec.push_back("Your next line is...");
-	vec.push_back("Nigerundayo, Smokey!");
-	vec.push_back("Yare yare daze");
-	vec.push_back("You think it was joust a normal robot.. but it was me, DIO!");
-	vec.push_back("Yare yare daze");
-	vec.push_back("I can't beat the shit out of you without getting closer.");
-	vec.push_back("Rerorerorerorerorerorerorerorero");
-	vec.push_back("My name is Yoshikage Kira, I am 33 years old.");
-	return(vec[rand() % vec.size()]);
+void Bot::listUsers( std::string str ) {
+	if (_client.empty())
+		return ;
+	std::string message = "PRIVMSG " + _client + " :" + str;
+	send(_socketOut, message.c_str(), message.size(), 0);
+}
+
+std::string Bot::tellFuture( std::string str ) {
+	if (str.size() == 7)
+		return ("Please don't be silly");
+	return (_futures[rand() % _futures.size()]);
+}
+
+void Bot::fillSentences( void ) {
+	_sentences.push_back("I'm gonna FIX that spaghetti!");
+	_sentences.push_back("I REJECT MY HUMANITY, JOJO!!!");
+	_sentences.push_back("Your Stand is like your asshole: you can't go around showing it off to other people.");
+	_sentences.push_back("You pissed me off.");
+	_sentences.push_back("German Science is the best in the world!");
+	_sentences.push_back("Oh, you are approcing me!");
+	_sentences.push_back("ZA WARUDO!");
+	_sentences.push_back("MUDA MUDA MUDA MUDA MUDA");
+	_sentences.push_back("ORA ORA ORA ORA ORA");
+	_sentences.push_back("WRYYYY");
+	_sentences.push_back("Your next line is...");
+	_sentences.push_back("Nigerundayo, Smokey!");
+	_sentences.push_back("Yare yare daze");
+	_sentences.push_back("You think it was joust a normal robot.. but it was me, DIO!");
+	_sentences.push_back("Yare yare daze");
+	_sentences.push_back("I can't beat the shit out of you without getting closer.");
+	_sentences.push_back("Rerorerorerorerorerorerorerorero");
+	_sentences.push_back("My name is Yoshikage Kira, I am 33 years old.");
+	_sentences.push_back("Dream Pig");
+}
+
+void Bot::fillJokes( void ) {
+	_jokes.push_back("I'm gonna FIX that spaghetti!");
+	_jokes.push_back("I REJECT MY HUMANITY, JOJO!!!");
+	_jokes.push_back("Your Stand is like your asshole: you can't go around showing it off to other people.");
+	_jokes.push_back("You pissed me off.");
+	_jokes.push_back("German Science is the best in the world!");
+	_jokes.push_back("Oh, you are approcing me!");
+	_jokes.push_back("ZA WARUDO!");
+	_jokes.push_back("MUDA MUDA MUDA MUDA MUDA");
+	_jokes.push_back("ORA ORA ORA ORA ORA");
+	_jokes.push_back("WRYYYY");
+	_jokes.push_back("Your next line is...");
+	_jokes.push_back("Nigerundayo, Smokey!");
+	_jokes.push_back("Yare yare daze");
+	_jokes.push_back("You think it was joust a normal robot.. but it was me, DIO!");
+	_jokes.push_back("Yare yare daze");
+	_jokes.push_back("I can't beat the shit out of you without getting closer.");
+	_jokes.push_back("Rerorerorerorerorerorerorerorero");
+	_jokes.push_back("My name is Yoshikage Kira, I am 33 years old.");
+	_jokes.push_back("Dream Pig");
+}
+
+void Bot::fillFutures( void ) {
+	_futures.push_back("As I see it, yes");
+	_futures.push_back("It is certain");
+	_futures.push_back("It is decidedly so");
+	_futures.push_back("Most likely");
+	_futures.push_back("Outlook good");
+	_futures.push_back("Signs point to yes");
+	_futures.push_back("Yes");
+	_futures.push_back("Yes, definitely");
+	_futures.push_back("You may rely on it");
+	_futures.push_back("Reply hazy, try again");
+	_futures.push_back("Ask again later");
+	_futures.push_back("Better not tell you now");
+	_futures.push_back("Cannot predict now");
+	_futures.push_back("Concentrate and ask again");
+	_futures.push_back("Don't count on it");
+	_futures.push_back("My reply is no");
+	_futures.push_back("My sources say no");
+	_futures.push_back("Outlook not so good");
+	_futures.push_back("Very doubtful");
+	_futures.push_back("No");
+	_futures.push_back("I am sorry but no");
 }

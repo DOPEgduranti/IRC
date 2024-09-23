@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:40:40 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/16 16:26:37 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/23 11:16:32 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,13 @@ private:
 	std::string _serverIpAddr;
 	int _serverPort;
 	std::string _serverKey;
+	std::vector<std::string> _futures;
+	std::vector<std::string> _jokes;
+	std::vector<std::string> _sentences;
+	std::string _client;
 	Bot( void ) {}
 public:
-	Bot( std::string IpAdd, std::string port, std::string key ) : _name("bot"), _serverIpAddr(IpAdd), _serverPort(static_cast<int>(std::strtol(port.c_str(), NULL, 10))), _serverKey(key) {}
+	Bot( std::string IpAdd, std::string port, std::string key );
 	~Bot( void ) {}
 	
 	static void signalHandler( int signum );
@@ -58,7 +62,11 @@ public:
 	void closeBot( void );
 
 	void answer( std::string str );
-	std::string randomMessage( void );
+	void listUsers( std::string str );
+	void fillSentences ( void );
+	void fillJokes ( void );
+	void fillFutures ( void );
+	std::string tellFuture( std::string str );
 };
 
 #endif
