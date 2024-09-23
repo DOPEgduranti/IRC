@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:54:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/23 11:51:55 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/23 11:56:01 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ void Bot::answer( std::string str ) {
 		}
 		else if (message == "tell me a joke")
 			ans += _jokes[rand() % _jokes.size()] + "\r\n";
-		else if (message.find("future=") != std::string::npos)
+		else if (message.find("future=") == 0)
 			ans += tellFuture(message) + "\r\n";
 		else
 			ans += "Nice to meet you " + cli + "! How can I help you?\r\n";
