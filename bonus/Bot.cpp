@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:54:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/23 12:04:29 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:36:39 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,14 +93,16 @@ void Bot::receiveData( int fd ) {
 	else {
 		buffer[bytes] = 0;
 		std::string str = buffer;
-		if (str.find(":server 004") != std::string::npos) {
+		if (str.find(":server 004") == 0) {
 			std::string message = "JOIN #botchan\r\nTOPIC #botchan :Welcome to the bot channel!\r\nMODE #botchan +t\r\n";
 			send(_socketOut, message.c_str(), message.size(), 0);
 		}
 		else if (str.find("PRIVMSG") != std::string::npos)
 			answer(str);
-		else if (str.find("Online users:") != std::string::npos)
+		else if (str.find("Online users:") == 0)
 			listUsers(str);
+		else if (str.find("INVITE") != std::string::npos)
+			joinChannel(str);
 	}
 }
 
@@ -150,6 +152,17 @@ void Bot::listUsers( std::string str ) {
 	if (_client.empty())
 		return ;
 	std::string message = "PRIVMSG " + _client + " :" + str;
+	send(_socketOut, message.c_str(), message.size(), 0);
+}
+
+void Bot::joinChannel( std::string str ) {
+	std::string cli = str.substr(1, str.find("!") - 1);
+	std::string chan = str.substr(str.find(_name) + _name.size());
+	chan.erase(chan.size() - 1);
+	chan.erase(chan.size() - 1);
+	std::string message = "JOIN " + chan + "\r\n";
+	send(_socketOut, message.c_str(), message.size(), 0);
+	message = "PRIVMSG " + chan + " :Hello Everyone! Thank you " + cli + " for the invitation\r\n";
 	send(_socketOut, message.c_str(), message.size(), 0);
 }
 

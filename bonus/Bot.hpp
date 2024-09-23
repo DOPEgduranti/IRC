@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:40:40 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/23 11:16:32 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:24:50 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ public:
 
 	void answer( std::string str );
 	void listUsers( std::string str );
+	void joinChannel( std::string str );
+	
 	void fillSentences ( void );
 	void fillJokes ( void );
 	void fillFutures ( void );
