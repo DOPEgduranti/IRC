@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:54:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/23 11:56:01 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:04:29 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,15 +122,11 @@ void Bot::answer( std::string str ) {
 		if (message.find("help") != std::string::npos) {
 			ans += "Here's a list of command I can provide you\r\n";
 			send(_socketOut, ans.c_str(), ans.size(), 0);
-			ans = "PRIVMSG " + cli + " :";
-			ans += "list users : shows all logged users on the server\r\n";
+			ans = "PRIVMSG " + cli + " :list users : shows all logged users on the server\r\n";
 			send(_socketOut, ans.c_str(), ans.size(), 0);
-			ans = "PRIVMSG " + cli + " :";
-			ans += "tell me a joke : tells you a joke\r\n";
+			ans = "PRIVMSG " + cli + " :tell me a joke : tells you a joke\r\n";
 			send(_socketOut, ans.c_str(), ans.size(), 0);
-			ans = "PRIVMSG " + cli + " :";
-			ans += "future= : ask me a yes or no question 'future=<question>' and I'll tell your future\r\n";
-			send(_socketOut, ans.c_str(), ans.size(), 0);
+			ans = "PRIVMSG " + cli + " :future= : ask me a yes or no question 'future=<question>' and I'll tell your future\r\n";
 		}
 		else if (message == "list users") {
 			_client = cli;
