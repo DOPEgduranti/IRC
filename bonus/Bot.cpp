@@ -6,7 +6,7 @@
 /*   By: gduranti <gduranti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:54:11 by gduranti          #+#    #+#             */
-/*   Updated: 2024/09/23 12:36:39 by gduranti         ###   ########.fr       */
+/*   Updated: 2024/09/24 10:13:16 by gduranti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,25 +195,25 @@ void Bot::fillSentences( void ) {
 }
 
 void Bot::fillJokes( void ) {
-	_jokes.push_back("I'm gonna FIX that spaghetti!");
-	_jokes.push_back("I REJECT MY HUMANITY, JOJO!!!");
-	_jokes.push_back("Your Stand is like your asshole: you can't go around showing it off to other people.");
-	_jokes.push_back("You pissed me off.");
-	_jokes.push_back("German Science is the best in the world!");
-	_jokes.push_back("Oh, you are approcing me!");
-	_jokes.push_back("ZA WARUDO!");
-	_jokes.push_back("MUDA MUDA MUDA MUDA MUDA");
-	_jokes.push_back("ORA ORA ORA ORA ORA");
-	_jokes.push_back("WRYYYY");
+	_jokes.push_back("What do you call a pile of cats? A meow-ntain.");
+	_jokes.push_back("Why do cows wear bells? Because their horns don't work.");
+	_jokes.push_back("Why did the bicycle fall over? Because it was two tired.");
+	_jokes.push_back("What do elves learn in school? The elf-abet.");
+	_jokes.push_back("Why shouldn't you use a broken pencil? Because it's pointless.");
+	_jokes.push_back("What has four wheels and flies? A garbage truck!");
+	_jokes.push_back("What did the tomato say to the other tomato during a race? Ketchup.");
+	_jokes.push_back("What did one wall say to the other? I'll meet you at the corner.");
+	_jokes.push_back("What do sea monsters eat? Fish and ships.");
+	_jokes.push_back("I lost an electron. You really have to keep an ion them!");
 	_jokes.push_back("Your next line is...");
-	_jokes.push_back("Nigerundayo, Smokey!");
-	_jokes.push_back("Yare yare daze");
-	_jokes.push_back("You think it was joust a normal robot.. but it was me, DIO!");
-	_jokes.push_back("Yare yare daze");
-	_jokes.push_back("I can't beat the shit out of you without getting closer.");
-	_jokes.push_back("Rerorerorerorerorerorerorerorero");
-	_jokes.push_back("My name is Yoshikage Kira, I am 33 years old.");
-	_jokes.push_back("Dream Pig");
+	_jokes.push_back("How many tickles does it take to make an octopus laugh? Ten-tickles.");
+	_jokes.push_back("What did 0 say to 8? Nice belt.");
+	_jokes.push_back("What does a spy do when he is cold? He goes undercover.");
+	_jokes.push_back("What's brown and sticky? A stick.");
+	_jokes.push_back("What do you call a sad cup of coffee? Depresso.");
+	_jokes.push_back("What do you call a sleeping dinosaur? A dino-snore.");
+	_jokes.push_back("What did the football coach say to the broken vending machine? Give me my quarterback.");
+	_jokes.push_back("How did the barber win the race? He knew a shortcut!");
 }
 
 void Bot::fillFutures( void ) {
